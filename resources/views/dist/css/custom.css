@@ -1,0 +1,69 @@
+/* ================================================
+   ✅ CORRECCIÓN FINAL - AJUSTE DEL LAYOUT GENERAL
+   ================================================ */
+
+/* Evita que el contenido se corte */
+.content-wrapper {
+  overflow-x: auto !important;
+  transition: margin-left 0.3s ease-in-out;
+}
+
+/* Ajuste cuando el menú lateral está expandido */
+body.sidebar-mini .content-wrapper {
+  margin-left: 250px !important; /* ancho normal del menú */
+}
+
+/* Ajuste cuando el menú lateral está colapsado */
+body.sidebar-mini.sidebar-collapse .content-wrapper {
+  margin-left: 80px !important; /* ancho reducido */
+}
+
+/* Para pantallas pequeñas (móviles/tablets) */
+@media (max-width: 991px) {
+  body.sidebar-mini .content-wrapper {
+    margin-left: 0 !important; /* ocupa todo el ancho */
+    padding: 10px;
+  }
+}
+
+/* Asegura que las tablas grandes no se corten */
+.card-body {
+  overflow-x: auto !important;
+}
+
+/* Mejora la transición visual */
+.main-sidebar {
+  transition: all 0.3s ease-in-out;
+}
+
+/* ==== Ajuste preciso del contenido para evitar recorte con el sidebar ==== */
+
+/* Espacio interno dentro del área de contenido principal */
+.content-wrapper {
+  padding-left: 40px !important;  /* aumenta espacio a la izquierda */
+  padding-right: 25px !important; /* evita recorte a la derecha */
+  transition: all 0.3s ease;
+}
+
+/* Cuando el sidebar está colapsado */
+body.sidebar-collapse .content-wrapper {
+  padding-left: 20px !important;
+  padding-right: 15px !important;
+}
+
+/* Evitar que el contenido o las tablas se salgan del ancho */
+.content-wrapper .card,
+.content-wrapper .table-responsive {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  width: 100% !important;
+  overflow-x: auto;
+}
+
+/* En pantallas pequeñas, mantener márgenes suaves */
+@media (max-width: 991px) {
+  .content-wrapper {
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+  }
+}
