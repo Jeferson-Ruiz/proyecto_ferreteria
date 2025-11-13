@@ -47,8 +47,10 @@
 
 
   // NAVBAR Y SIDEBAR
-  include "modulos/navbar.php";
-  include "modulos/sidebar.php";
+
+  $modPath = resource_path('views/modulos/');
+  include $modPath . 'navbar.blade.php';
+  include $modPath . 'sidebar.blade.php'; 
 
   // Comprobamos si hay una ruta por GET
   if (isset($_GET["ruta"])) {
@@ -72,19 +74,19 @@
 
       // Si la ruta existe, incluimos su módulo
       if (in_array($ruta, $rutas_validas)) {
-          include "modulos/" . $ruta . ".php";
+        include $modPath . $ruta . '.blade.php';
       } else {
           // Página no encontrada
-          include "modulos/404.php";
+           include $modPath . '404.blade.php';
       }
 
   } else {
       // Página por defecto
-      include "modulos/inicio.php";
+      include $modPath . 'inicio.blade.php';
   }
 
   // Footer del sistema
-  include "modulos/footer.php";
+  include $modPath . 'footer.blade.php';
 ?>
 
 </div>

@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\CategoriaController;
+use App\Http\Controllers\UsuariosController;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -19,3 +21,12 @@ Route::get('/productos', [ProductoController::class, 'mostrar'])->name('producto
 Route::post('/productos/crear', [ProductoController::class, 'crear'])->name('productos.crear');
 Route::post('/productos/editar', [ProductoController::class, 'editar'])->name('productos.editar');
 Route::post('/productos/eliminar', [ProductoController::class, 'eliminar'])->name('productos.eliminar');
+
+
+Route::prefix('usuarios')->group(function () {
+    Route::get('/', [UsuariosController::class, 'index'])->name('usuarios.index');
+    Route::post('/crear', [UsuariosController::class, 'crear'])->name('usuarios.crear');
+    Route::post('/editar', [UsuariosController::class, 'editar'])->name('usuarios.editar');
+    Route::get('/eliminar/{id}', [UsuariosController::class, 'eliminar'])->name('usuarios.eliminar');
+});
+
