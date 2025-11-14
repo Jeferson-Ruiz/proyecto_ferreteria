@@ -1,64 +1,61 @@
 <?php
 
 namespace App\Models;
+use Illuminate\Support\Facades\DB;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-
-class Rol extends Model
+class ModeloRoles
 {
-    use HasFactory;
-
-    // Nombre de la tabla
-    protected $table = 'roles';
-
-    // Campos permitidos para asignación masiva
-    protected $fillable = ['nombre'];
-
-    // ======================================
-    // Mostrar roles
-    // ======================================
-    public static function mostrarRoles($item = null, $valor = null)
+    /* ======================================
+       Mostrar Roles
+    ====================================== */
+    public static function mdlMostrarRoles($item = null, $valor = null)
     {
-        if ($item !== null) {
-            return self::where($item, $valor)->first();
+        if ($item != null) {
+            return DB::table("roles")
+                ->where($item, $valor)
+                ->first();
         } else {
-            return self::orderBy('id', 'desc')->get();
+            return DB::table("roles")
+                ->orderBy("id", "DESC")
+                ->get();
         }
     }
 
-    // ======================================
-    // Crear rol
-    // ======================================
-    public static function crearRol($datos)
+    /* ======================================
+       Crear Rol
+    ====================================== */
+    public static function mdlIngresarRol($tabla, $datos)
     {
-        $rol = self::create([
+        $insert = DB::table($tabla)->insert([
             'nombre' => $datos['nombre']
         ]);
 
-        return $rol ? 'ok' : 'error';
+        return $insert ? "ok" : "error";
     }
 
-    // ======================================
-    // Editar rol
-    // ======================================
-    public static function editarRol($datos)
+    /* ======================================
+       Editar Rol
+    ====================================== */
+    public static function mdlEditarRol($tabla, $datos)
     {
-        $rol = self::find($datos['id']);
-        if (!$rol) return 'error';
+        $update = DB::table($tabla)
+            ->where('id', $datos['id'])
+            ->update([
+                'nombre' => $datos['nombre']
+            ]);
 
-        $rol->nombre = $datos['nombre'];
-        return $rol->save() ? 'ok' : 'error';
+        return $update ? "ok" : "error";
     }
 
-    // ======================================
-    // Borrar rol
-    // ======================================
-    public static function borrarRol($id)
+    /* ======================================
+       Eliminar Rol
+    ====================================== */
+    public static function mdlBorrarRol($tabla, $id)
     {
-        $rol = self::find($id);
-        if (!$rol) return 'error';
+        $delete = DB::table($tabla)
+            ->where('id', $id)
+            ->delete();
 
-        return $rol->delete() ? 'ok' : 'error';
+        return $delete ? "ok" : "error";
     }
 }
