@@ -4,16 +4,18 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\ModeloUsuarios;
+use App\Models\ModeloRoles;
 
 class ControladorUsuarios extends Controller
 {
     /* =============================================
        MOSTRAR USUARIOS (index)
     ============================================= */
-    public function ctrCrearUsuario()
+    public function index()
     {
         $usuarios = ModeloUsuarios::mdlMostrarUsuarios("usuarios", null, null);
-        return view('modulos.usuarios', compact('usuarios'));
+        $roles = ModeloRoles::mdlMostrarRoles();
+        return view('modulos.usuarios', compact('usuarios', 'roles'));
     }
 
     /* =============================================

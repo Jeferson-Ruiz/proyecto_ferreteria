@@ -1,3 +1,6 @@
+@extends('layouts.plantilla')
+
+@section('content')
 <!-- Contenedor principal -->
 <div class="content-wrapper">
   <!-- Encabezado de la página -->
@@ -7,7 +10,7 @@
         <div class="col-sm-6"></div>
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
-            <li class="breadcrumb-item"><a href="{{ url('/inicio') }}">Inicio</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('inicio') }}">Inicio</a></li>
             <li class="breadcrumb-item active">Panel de control</li>
           </ol>
         </div>
@@ -18,7 +21,6 @@
   <!-- Contenido principal -->
   <section class="content">
     <div class="container-fluid">
-
       <!-- 🧡 Bienvenida -->
       <div class="card shadow-sm">
         <div class="card-body text-center">
@@ -33,10 +35,9 @@
 
       <!-- 📊 Dashboard de estadísticas -->
       <div class="row mt-4">
-
         <!-- Usuarios -->
         <div class="col-lg-3 col-6">
-          <a href="{{ url('/usuarios') }}" class="small-box bg-info enlace-dashboard">
+          <a href="{{ route('usuarios.index') }}" class="small-box bg-info enlace-dashboard">
             <div class="inner">
               <h3>12</h3>
               <p>Usuarios Registrados</p>
@@ -49,7 +50,7 @@
 
         <!-- Productos -->
         <div class="col-lg-3 col-6">
-          <a href="{{ url('/productos') }}" class="small-box bg-success enlace-dashboard">
+          <a href="{{ route('productos.index') }}" class="small-box bg-success enlace-dashboard">
             <div class="inner">
               <h3>350</h3>
               <p>Productos en Inventario</p>
@@ -62,7 +63,7 @@
 
         <!-- Categorías -->
         <div class="col-lg-3 col-6">
-          <a href="{{ url('/categorias') }}" class="small-box bg-warning enlace-dashboard">
+          <a href="{{ route('categorias.index') }}" class="small-box bg-warning enlace-dashboard">
             <div class="inner">
               <h3>15</h3>
               <p>Categorías</p>
@@ -75,7 +76,7 @@
 
         <!-- Facturación -->
         <div class="col-lg-3 col-6">
-          <a href="{{ url('/facturas') }}" class="small-box bg-danger enlace-dashboard">
+          <a href="{{ route('listado.facturas') }}" class="small-box bg-danger enlace-dashboard">
             <div class="inner">
               <h3>$45M</h3>
               <p>Nueva Factura</p>
@@ -85,8 +86,8 @@
             </div>
           </a>
         </div>
-
       </div>
     </div>
   </section>
 </div>
+@endsection

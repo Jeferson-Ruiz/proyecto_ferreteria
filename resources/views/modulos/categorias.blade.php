@@ -9,13 +9,6 @@
   </section>
 
   <section class="content">
-    {{-- Mensajes de éxito o error --}}
-    @if (session('success'))
-      <div class="alert alert-success">{{ session('success') }}</div>
-    @elseif (session('error'))
-      <div class="alert alert-danger">{{ session('error') }}</div>
-    @endif
-
     <div class="card">
       <div class="card-header bg-primary text-white">
         <h3 class="card-title">Listado de Categorías</h3>
@@ -34,53 +27,56 @@
             </tr>
           </thead>
           <tbody>
-            @foreach ($categorias as $key => $categoria)
-              <tr>
-                <td>{{ $key + 1 }}</td>
-                <td>{{ $categoria->nombre }}</td>
-                <td>
-                  <!-- Botón Editar -->
-                  <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#modalEditarCategoria{{ $categoria->id }}">
-                    <i class="fas fa-edit"></i>
-                  </button>
-
-                  <!-- Botón Eliminar -->
-                  <form action="{{ route('categorias.eliminar') }}" method="POST" style="display:inline;">
-                    @csrf
-                    <input type="hidden" name="idCategoria" value="{{ $categoria->id }}">
-                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Eliminar categoría?')">
-                      <i class="fas fa-trash"></i>
+            @if($categorias && count($categorias) > 0)
+              @foreach($categorias as $key => $value)
+                <tr>
+                  <td>{{ $key + 1 }}</td>
+                  <td>{{ $value->nombre }}</td>
+                  <td>
+                    <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#modalEditarCategoria{{ $value->id }}">
+                      <i class="fas fa-edit"></i>
                     </button>
-                  </form>
-                </td>
-              </tr>
-
-              <!-- Modal Editar -->
-              <div class="modal fade" id="modalEditarCategoria{{ $categoria->id }}" tabindex="-1">
-                <div class="modal-dialog">
-                  <div class="modal-content">
-                    <form action="{{ route('categorias.editar') }}" method="POST">
+                    <form method="POST" action="{{ route('categorias.eliminar') }}" style="display: inline;">
                       @csrf
-                      <div class="modal-header bg-warning">
-                        <h5 class="modal-title">Editar Categoría</h5>
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                      </div>
-                      <div class="modal-body">
-                        <input type="hidden" name="idCategoria" value="{{ $categoria->id }}">
-                        <div class="form-group">
-                          <label>Nombre</label>
-                          <input type="text" name="editarCategoria" class="form-control" value="{{ $categoria->nombre }}" required>
-                        </div>
-                      </div>
-                      <div class="modal-footer">
-                        <button type="submit" class="btn btn-warning">Guardar</button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                      </div>
+                      <input type="hidden" name="idCategoria" value="{{ $value->id }}">
+                      <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Eliminar categoría?')">
+                        <i class="fas fa-trash"></i>
+                      </button>
                     </form>
+                  </td>
+                </tr>
+
+                <!-- Modal Editar -->
+                <div class="modal fade" id="modalEditarCategoria{{ $value->id }}" tabindex="-1">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <form method="POST" action="{{ route('categorias.editar') }}">
+                        @csrf
+                        <div class="modal-header bg-warning">
+                          <h5 class="modal-title">Editar Categoría</h5>
+                          <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                          <input type="hidden" name="idCategoria" value="{{ $value->id }}">
+                          <div class="form-group">
+                            <label>Nombre</label>
+                            <input type="text" name="editarCategoria" class="form-control" value="{{ $value->nombre }}" required>
+                          </div>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="submit" class="btn btn-warning">Guardar</button>
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                        </div>
+                      </form>
+                    </div>
                   </div>
                 </div>
-              </div>
-            @endforeach
+              @endforeach
+            @else
+              <tr>
+                <td colspan="3" class="text-center">No hay categorías registradas</td>
+              </tr>
+            @endif
           </tbody>
         </table>
       </div>
@@ -92,9 +88,9 @@
 <div class="modal fade" id="modalAgregarCategoria" tabindex="-1">
   <div class="modal-dialog">
     <div class="modal-content">
-      <form action="{{ route('categorias.crear') }}" method="POST">
+      <form method="POST" action="{{ route('categorias.crear') }}">
         @csrf
-        <div class="modal-header bg-primary text-white">
+        <div class="modal-header bg-primary">
           <h5 class="modal-title">Agregar Categoría</h5>
           <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>

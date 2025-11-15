@@ -9,14 +9,14 @@
     </li>
 
     <li class="nav-item d-none d-sm-inline-block">
-      <a href="index.php?ruta=inicio" class="nav-link">Inicio</a>
+      <a href="{{ url('/inicio') }}" class="nav-link">Inicio</a>
     </li>
   </ul>
 
   <!-- Lado derecho -->
   <ul class="navbar-nav ml-auto">
     <li class="nav-item">
-      <a class="nav-link text-danger" href="index.php?ruta=logout">
+      <a class="nav-link text-danger" href="{{ url('/logout') }}">
         <i class="fas fa-sign-out-alt"></i> Cerrar sesión
       </a>
     </li>

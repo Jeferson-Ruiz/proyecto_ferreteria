@@ -1,10 +1,6 @@
-<?php
-require_once "app/controladores/facturacion.controlador.php";
-require_once "app/modelos/facturacion.modelo.php";
+@extends('layouts.plantilla')
 
-$facturas = ControladorFacturacion::ctrMostrarFacturasConCliente();
-?>
-
+@section('content')
 <div class="content-wrapper">
   <section class="content-header">
     <div class="container-fluid">
@@ -31,35 +27,38 @@ $facturas = ControladorFacturacion::ctrMostrarFacturasConCliente();
             </tr>
           </thead>
           <tbody>
-            <?php if (!empty($facturas)): ?>
-              <?php foreach ($facturas as $i => $f): ?>
+            @if($facturas && count($facturas) > 0)
+              @foreach($facturas as $i => $f)
                 <tr>
-                  <td><?= $i + 1 ?></td>
-                  <td><?= htmlspecialchars($f["numero_factura"]) ?></td>
-                  <td><?= htmlspecialchars($f["cliente"]) ?></td>
-                  <td><?= htmlspecialchars($f["fecha"]) ?></td>
-                  <td>$<?= number_format($f["total"], 2) ?></td>
+                  <td>{{ $i + 1 }}</td>
+                  <td>{{ $f->numero_factura }}</td>
+                  <td>{{ $f->cliente }}</td>
+                  <td>{{ $f->fecha }}</td>
+                  <td>${{ number_format($f->total, 2) }}</td>
                   <td>
                     <!-- Ver PDF generado -->
-                    <a href="factura_pdf/<?= htmlspecialchars($f["numero_factura"]) ?>.pdf" target="_blank" class="btn btn-info btn-sm">
+                    <a href="{{ asset('factura_pdf/' . $f->numero_factura . '.pdf') }}" target="_blank" class="btn btn-info btn-sm">
                       <i class="fas fa-file-pdf"></i> Ver
                     </a>
 
                     <!-- Eliminar factura -->
-                    <a href="index.php?ruta=listado-facturas&idFactura=<?= $f["id"] ?>"
-                       class="btn btn-danger btn-sm"
-                       onclick="return confirm('¿Eliminar factura?')">
-                      <i class="fas fa-trash"></i> Eliminar
-                    </a>
+                    <form method="POST" action="{{ route('facturas.eliminar') }}" style="display: inline;">
+                      @csrf
+                      <input type="hidden" name="idFactura" value="{{ $f->id }}">
+                      <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Eliminar factura?')">
+                        <i class="fas fa-trash"></i> Eliminar
+                      </button>
+                    </form>
                   </td>
                 </tr>
-              <?php endforeach; ?>
-            <?php else: ?>
+              @endforeach
+            @else
               <tr><td colspan="6" class="text-center">No hay facturas registradas.</td></tr>
-            <?php endif; ?>
+            @endif
           </tbody>
         </table>
       </div>
     </div>
   </section>
 </div>
+@endsection

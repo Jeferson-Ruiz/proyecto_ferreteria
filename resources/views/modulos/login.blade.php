@@ -6,9 +6,9 @@
   <title>Ferretería | Iniciar Sesión</title>
 
   <!-- Font Awesome -->
-  <link rel="stylesheet" href="app/vistas/plugins/fontawesome-free/css/all.min.css">
+  <link rel="stylesheet" href="{{ asset('plugins/fontawesome-free/css/all.min.css') }}">
   <!-- AdminLTE -->
-  <link rel="stylesheet" href="app/vistas/dist/css/adminlte.min.css">
+  <link rel="stylesheet" href="{{ asset('dist/css/adminlte.min.css') }}">
 </head>
 
 <body class="hold-transition login-page" style="background-color: #f4f6f9;">
@@ -21,10 +21,25 @@
     <div class="card-body login-card-body">
       <p class="login-box-msg">Inicia sesión para continuar</p>
 
-    <form method="POST" action="{{ route('login.procesar') }}">
+      <!-- Mostrar errores -->
+      @if($errors->any())
+        <div class="alert alert-danger">
+          @foreach($errors->all() as $error)
+            {{ $error }}
+          @endforeach
+        </div>
+      @endif
+
+      @if(session('error'))
+        <div class="alert alert-danger">
+          {{ session('error') }}
+        </div>
+      @endif
+
+      <form method="POST" action="{{ route('login.procesar') }}">
         @csrf
         <div class="input-group mb-3">
-          <input type="email" name="correo" class="form-control" placeholder="Correo electrónico" required>
+          <input type="email" name="correo" class="form-control" placeholder="Correo electrónico" required value="{{ old('correo') }}">
           <div class="input-group-append">
             <div class="input-group-text"><span class="fas fa-envelope"></span></div>
           </div>
@@ -48,10 +63,10 @@
 </div>
 
 <!-- jQuery -->
-<script src="app/vistas/plugins/jquery/jquery.min.js"></script>
+<script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
 <!-- Bootstrap 4 -->
-<script src="app/vistas/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 <!-- AdminLTE App -->
-<script src="app/vistas/dist/js/adminlte.min.js"></script>
+<script src="{{ asset('dist/js/adminlte.min.js') }}"></script>
 </body>
 </html>

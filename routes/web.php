@@ -24,29 +24,42 @@ Route::get('/logout', [ControladorAuth::class, 'logout'])->name('logout');
 
 Route::get('/inicio', function () { return view('modulos.inicio'); })->name('inicio');
 
+
 Route::get('/categorias', [CategoriaController::class, 'mostrar'])->name('categorias.index');
 Route::post('/categorias/crear', [CategoriaController::class, 'crear'])->name('categorias.crear');
 Route::post('/categorias/editar', [CategoriaController::class, 'editar'])->name('categorias.editar');
 Route::post('/categorias/eliminar', [CategoriaController::class, 'eliminar'])->name('categorias.eliminar');
+
+
 Route::get('/productos', [ProductoController::class, 'mostrar'])->name('productos.index');
 Route::post('/productos/crear', [ProductoController::class, 'crear'])->name('productos.crear');
 Route::post('/productos/editar', [ProductoController::class, 'editar'])->name('productos.editar');
 Route::post('/productos/eliminar', [ProductoController::class, 'eliminar'])->name('productos.eliminar');
+
+
 Route::get('/usuarios', [ControladorUsuarios::class, 'index'])->name('usuarios.index');
 Route::get('/usuarios/crear', [ControladorUsuarios::class, 'create'])->name('usuarios.create');
 Route::post('/usuarios/crear', [ControladorUsuarios::class, 'store'])->name('usuarios.store');
 Route::get('/usuarios/editar/{id}', [ControladorUsuarios::class, 'edit'])->name('usuarios.edit');
 Route::post('/usuarios/editar/{id}', [ControladorUsuarios::class, 'update'])->name('usuarios.update');
 Route::get('/usuarios/eliminar/{id}', [ControladorUsuarios::class, 'destroy'])->name('usuarios.destroy');
-Route::get('/roles', [ControladorRoles::class, 'index'])->name('roles.index');
-Route::get('/roles/crear', [ControladorRoles::class, 'create'])->name('roles.create');
-Route::post('/roles/crear', [ControladorRoles::class, 'store'])->name('roles.store');
-Route::get('/roles/editar/{id}', [ControladorRoles::class, 'edit'])->name('roles.edit');
-Route::post('/roles/editar/{id}', [ControladorRoles::class, 'update'])->name('roles.update');
-Route::get('/roles/eliminar/{id}', [ControladorRoles::class, 'destroy'])->name('roles.destroy');
+
+Route::get('/roles', [ControladorRoles::class, 'ctrMostrarRoles'])->name('roles.index');
+Route::post('/roles', [ControladorRoles::class, 'ctrCrearRol'])->name('roles.store');
+Route::put('/roles/{id}', [ControladorRoles::class, 'ctrEditarRol'])->name('roles.update');
+Route::delete('/roles/{id}', [ControladorRoles::class, 'ctrBorrarRol'])->name('roles.destroy');
+
+// MOSTRAR FORMULARIO DE FACTURA
+Route::get('/facturas', [ControladorFacturacion::class, 'ctrCrearFacturaView'])->name('facturas.index');
+
+// CREAR FACTURA (POST)
 Route::post('/facturas/crear', [ControladorFacturacion::class, 'ctrCrearFactura'])->name('facturas.crear');
+
+// ELIMINAR FACTURA  
 Route::get('/facturas/eliminar', [ControladorFacturacion::class, 'ctrEliminarFactura'])->name('facturas.eliminar');
-Route::get('/facturas/listado', function () {
+
+
+Route::get('/listado-facturas', function () {
     $facturas = \App\Models\ModeloFacturacion::mdlMostrarFacturasConCliente();
-    return view('listado-facturas', compact('facturas'));
+    return view('modulos.listado-facturas', compact('facturas')); // ✅ Agregar 'modulos.'
 })->name('listado.facturas');

@@ -1,11 +1,6 @@
-<?php
-require_once "app/controladores/facturacion.controlador.php";
-require_once "app/controladores/productos.controlador.php";
+@extends('layouts.plantilla')
 
-ControladorFacturacion::ctrCrearFactura();
-$productos = ControladorProductos::ctrMostrarProductos(null, null);
-?>
-
+@section('content')
 <div class="content-wrapper">
   <section class="content-header">
     <div class="container-fluid">
@@ -20,7 +15,8 @@ $productos = ControladorProductos::ctrMostrarProductos(null, null);
       </div>
 
       <div class="card-body">
-        <form method="post" id="formFactura">
+        <form method="POST" action="{{ route('facturas.crear') }}" id="formFactura">
+          @csrf
           <div class="row">
             <div class="col-md-6">
               <div class="form-group">
@@ -80,7 +76,7 @@ $productos = ControladorProductos::ctrMostrarProductos(null, null);
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-  const productos = <?= json_encode($productos) ?>;
+  const productos = @json($productos);
   const buscarInput = document.getElementById("buscarProducto");
   const lista = document.getElementById("listaProductos");
   const tbody = document.querySelector("#tablaDetalle tbody");
@@ -138,9 +134,42 @@ document.addEventListener("DOMContentLoaded", () => {
   window.eliminarProducto = (index) => { carrito.splice(index,1); renderCarrito(); };
   window.actualizarCantidad = (index, cantidad) => { carrito[index].cantidad = parseInt(cantidad); renderCarrito(); };
 
-  form.addEventListener("submit", () => {
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
     btnGuardar.disabled = true;
     btnGuardar.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+
+    try {
+      const response = await fetch("{{ route('facturas.crear') }}", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify({
+          productos: carrito,
+          cliente_nombre: document.querySelector('input[name="cliente_nombre"]').value,
+          cliente_documento: document.querySelector('input[name="cliente_documento"]').value
+        })
+      });
+
+      const result = await response.json();
+      
+      if (result.success) {
+        alert(result.message);
+        if (result.pdf_url) window.open(result.pdf_url, '_blank');
+        window.location.href = result.redirect;
+      } else {
+        alert(result.message);
+        btnGuardar.disabled = false;
+        btnGuardar.innerHTML = '<i class="fas fa-save"></i> Guardar Factura';
+      }
+    } catch (error) {
+      alert('Error al procesar la factura');
+      btnGuardar.disabled = false;
+      btnGuardar.innerHTML = '<i class="fas fa-save"></i> Guardar Factura';
+    }
   });
 });
 </script>
+@endsection

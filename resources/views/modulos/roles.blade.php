@@ -1,16 +1,6 @@
-<?php
-require_once "app/controladores/controlador.roles.php";
-require_once "app/modelos/modelo.roles.php";
+@extends('layouts.plantilla')
 
-// Procesar acciones
-ControladorRoles::ctrCrearRol();
-ControladorRoles::ctrEditarRol();
-ControladorRoles::ctrBorrarRol();
-
-// Obtener listado de roles
-$roles = ControladorRoles::ctrMostrarRoles(null, null);
-?>
-
+@section('content')
 <div class="content-wrapper">
   <section class="content-header">
     <div class="container-fluid">
@@ -39,28 +29,36 @@ $roles = ControladorRoles::ctrMostrarRoles(null, null);
                 </tr>
               </thead>
               <tbody>
-                <?php foreach ($roles as $key => $rol): ?>
+                @if($roles && count($roles) > 0)
+                  @foreach($roles as $key => $rol)
+                    <tr>
+                      <td>{{ $key + 1 }}</td>
+                      <td>{{ $rol->nombre }}</td>
+                      <td>
+                        <div class="btn-group">
+                          <button class="btn btn-warning btnEditarRol"
+                                  data-toggle="modal"
+                                  data-target="#modalEditarRol"
+                                  data-id="{{ $rol->id }}"
+                                  data-nombre="{{ $rol->nombre }}">
+                            <i class="fas fa-edit"></i>
+                          </button>
+                          <form method="POST" action="{{ route('roles.destroy', $rol->id) }}" style="display: inline;">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger" onclick="return confirm('¿Seguro que deseas eliminar este rol?');">
+                              <i class="fas fa-trash"></i>
+                            </button>
+                          </form>
+                        </div>
+                      </td>
+                    </tr>
+                  @endforeach
+                @else
                   <tr>
-                    <td><?= $key + 1 ?></td>
-                    <td><?= htmlspecialchars($rol["nombre"]) ?></td>
-                    <td>
-                      <div class="btn-group">
-                        <button class="btn btn-warning btnEditarRol"
-                                data-toggle="modal"
-                                data-target="#modalEditarRol"
-                                data-id="<?= $rol["id"] ?>"
-                                data-nombre="<?= htmlspecialchars($rol["nombre"]) ?>">
-                          <i class="fas fa-edit"></i>
-                        </button>
-                        <a href="index.php?ruta=roles&idRol=<?= $rol["id"] ?>"
-                           class="btn btn-danger"
-                           onclick="return confirm('¿Seguro que deseas eliminar este rol?');">
-                          <i class="fas fa-trash"></i>
-                        </a>
-                      </div>
-                    </td>
+                    <td colspan="3" class="text-center">No hay roles registrados</td>
                   </tr>
-                <?php endforeach; ?>
+                @endif
               </tbody>
             </table>
           </div>
@@ -74,7 +72,8 @@ $roles = ControladorRoles::ctrMostrarRoles(null, null);
 <div id="modalAgregarRol" class="modal fade" role="dialog">
   <div class="modal-dialog">
     <div class="modal-content">
-      <form method="post">
+      <form method="POST" action="{{ route('roles.store') }}">
+        @csrf
         <div class="modal-header bg-primary text-white">
           <h4 class="modal-title">Agregar Rol</h4>
           <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -94,7 +93,9 @@ $roles = ControladorRoles::ctrMostrarRoles(null, null);
 <div id="modalEditarRol" class="modal fade" role="dialog">
   <div class="modal-dialog">
     <div class="modal-content">
-      <form method="post">
+      <form method="POST" id="formEditarRol">
+        @csrf
+        @method('PUT')
         <div class="modal-header bg-warning text-white">
           <h4 class="modal-title">Editar Rol</h4>
           <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -117,6 +118,10 @@ document.querySelectorAll(".btnEditarRol").forEach(btn => {
   btn.addEventListener("click", () => {
     document.getElementById("idRol").value = btn.dataset.id;
     document.getElementById("editarRol").value = btn.dataset.nombre;
+    
+    // Actualizar action del formulario
+    const form = document.getElementById("formEditarRol");
+    form.action = "{{ url('roles') }}/" + btn.dataset.id;
   });
 });
 
@@ -129,3 +134,4 @@ $(document).ready(function() {
   });
 });
 </script>
+@endsection

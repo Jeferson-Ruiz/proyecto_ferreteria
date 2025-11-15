@@ -1,6 +1,6 @@
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
   <!-- LOGO / NOMBRE -->
-  <a href="index.php?ruta=inicio" class="brand-link">
+  <a href="{{ url('/inicio') }}" class="brand-link">
     <span class="brand-text font-weight-light">Ferretería San Miguel</span>
   </a>
 
@@ -10,7 +10,7 @@
         
         <!-- INICIO -->
         <li class="nav-item">
-          <a href="index.php?ruta=inicio" class="nav-link">
+          <a href="{{ url('/inicio') }}" class="nav-link">
             <i class="nav-icon fas fa-home"></i>
             <p>Inicio</p>
           </a>
@@ -18,7 +18,7 @@
 
         <!-- USUARIOS -->
         <li class="nav-item">
-          <a href="index.php?ruta=usuarios" class="nav-link">
+        <a href="{{ url('/usuarios') }}" class="nav-link">
             <i class="nav-icon fas fa-users"></i>
             <p>Usuarios</p>
           </a>
@@ -26,7 +26,7 @@
 
         <!-- ROLES -->
         <li class="nav-item">
-          <a href="index.php?ruta=roles" class="nav-link">
+          <a href="{{ url('/roles') }}" class="nav-link">
             <i class="nav-icon fas fa-user-shield"></i>
             <p>Roles</p>
           </a>
@@ -34,7 +34,7 @@
 
         <!-- CATEGORÍAS -->
         <li class="nav-item">
-          <a href="index.php?ruta=categorias" class="nav-link">
+          <a href="{{ url('/categorias') }}" class="nav-link">
             <i class="nav-icon fas fa-tags"></i>
             <p>Categorías</p>
           </a>
@@ -42,43 +42,41 @@
 
         <!-- PRODUCTOS -->
         <li class="nav-item">
-          <a href="index.php?ruta=productos" class="nav-link">
+          <a href="{{ url('/productos') }}" class="nav-link">
             <i class="nav-icon fas fa-boxes"></i>
             <p>Productos</p>
           </a>
         </li>
 
+        <!-- FACTURACIÓN -->
         <li class="nav-item has-treeview">
           <a href="#" class="nav-link">
             <i class="nav-icon fas fa-file-invoice-dollar"></i>
             <p>Facturación<i class="right fas fa-angle-left"></i></p>
-        </a>
-
-        <ul class="nav nav-treeview">
-           <li class="nav-item">
-            <a href="index.php?ruta=facturas" class="nav-link">
-            <i class="far fa-circle nav-icon"></i>
-            <p>Nueva Factura</p>
-        </a>
-        </li>
-
-        <li class="nav-item">
-            <a href="index.php?ruta=listado-facturas" class="nav-link">
-            <i class="far fa-circle nav-icon"></i>
-            <p>Listado de Facturas</p>
-        </a>
-        </li>
-        </ul>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="{{ url('/facturas') }}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Nueva Factura</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{{ url('/listado-facturas') }}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Listado de Facturas</p>
+              </a>
+            </li>
+          </ul>
         </li>
 
         <!-- CERRAR SESIÓN -->
         <li class="nav-item">
-          <a href="index.php?ruta=logout" class="nav-link text-danger">
-          <i class="nav-icon fas fa-sign-out-alt"></i>
-          <p>Cerrar sesión</p>
-        </a>
+          <a href="{{ url('/logout') }}" class="nav-link text-danger">
+            <i class="nav-icon fas fa-sign-out-alt"></i>
+            <p>Cerrar sesión</p>
+          </a>
         </li>
-
 
       </ul>
     </nav>
