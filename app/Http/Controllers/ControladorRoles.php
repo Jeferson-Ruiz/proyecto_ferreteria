@@ -8,87 +8,72 @@ use App\Models\ModeloRoles;
 class ControladorRoles extends Controller
 {
     /* ======================================
-       Mostrar Roles
+       Mostrar Roles (index)
     ====================================== */
-    public static function ctrMostrarRoles($item = null, $valor = null)
+    public function ctrMostrarRoles()
     {
-        return ModeloRoles::mdlMostrarRoles($item, $valor);
+        $roles = ModeloRoles::mdlMostrarRoles();
+        return view('modulos.roles', compact('roles'));
     }
 
     /* ======================================
-       Crear Rol
+       Crear Rol (store)
     ====================================== */
-    public static function ctrCrearRol(Request $request)
+    public function ctrCrearRol(Request $request)
     {
         if (!empty($request->nuevoRol)) {
 
-            $tabla = "roles";
             $datos = ["nombre" => trim($request->nuevoRol)];
 
+            // Validar que el rol no exista
             $rolExistente = ModeloRoles::mdlMostrarRoles("nombre", $datos["nombre"]);
-
             if ($rolExistente) {
-                echo "<script>
-                    alert('❌ Este rol ya existe.');
-                    window.location='/roles';
-                </script>";
-                return;
+                return back()->with('error', '❌ Este rol ya existe.');
             }
 
-            $respuesta = ModeloRoles::mdlIngresarRol($tabla, $datos);
+            $respuesta = ModeloRoles::mdlIngresarRol("roles", $datos);
 
             if ($respuesta == "ok") {
-                echo "<script>
-                    alert('✅ Rol agregado correctamente');
-                    window.location='/roles';
-                </script>";
+                return redirect()->route('roles.index')->with('success', '✅ Rol agregado correctamente');
             }
         }
+
+        return back()->with('error', 'No se pudo crear el rol');
     }
 
     /* ======================================
-       Editar Rol
+       Editar Rol (update)
     ====================================== */
-    public static function ctrEditarRol(Request $request)
+    public function ctrEditarRol(Request $request, $id)
     {
         if (!empty($request->editarRol)) {
 
-            $tabla = "roles";
-
             $datos = [
-                "id"     => $request->idRol,
+                "id"     => $id,
                 "nombre" => trim($request->editarRol)
             ];
 
-            $respuesta = ModeloRoles::mdlEditarRol($tabla, $datos);
+            $respuesta = ModeloRoles::mdlEditarRol("roles", $datos);
 
             if ($respuesta == "ok") {
-                echo "<script>
-                    alert('✅ Rol actualizado correctamente');
-                    window.location='/roles';
-                </script>";
+                return redirect()->route('roles.index')->with('success', '✅ Rol actualizado correctamente');
             }
         }
+
+        return back()->with('error', 'No se pudo actualizar el rol');
     }
 
     /* ======================================
-       Borrar Rol
+       Eliminar Rol (destroy)
     ====================================== */
-    public static function ctrBorrarRol(Request $request)
+    public function ctrBorrarRol($id)
     {
-        if ($request->has("idRol")) {
+        $respuesta = ModeloRoles::mdlBorrarRol("roles", $id);
 
-            $tabla = "roles";
-            $id = intval($request->idRol);
-
-            $respuesta = ModeloRoles::mdlBorrarRol($tabla, $id);
-
-           	if ($respuesta == "ok") {
-                echo "<script>
-                    alert('🗑️ Rol eliminado correctamente');
-                    window.location='/roles';
-                </script>";
-            }
+        if ($respuesta == "ok") {
+            return redirect()->route('roles.index')->with('success', '🗑️ Rol eliminado correctamente');
         }
+
+        return back()->with('error', 'No se pudo eliminar el rol');
     }
 }

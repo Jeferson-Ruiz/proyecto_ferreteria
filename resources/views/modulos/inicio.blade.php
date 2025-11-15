@@ -1,12 +1,3 @@
-<?php
-if (session_status() === PHP_SESSION_NONE) {
-  session_start();
-}
-if (!isset($_SESSION["iniciarSesion"]) || $_SESSION["iniciarSesion"] !== "ok") {
-  echo '<script>window.location = "index.php?ruta=login";</script>';
-  exit;
-}
-?>
 <!-- Contenedor principal -->
 <div class="content-wrapper">
   <!-- Encabezado de la página -->
@@ -16,7 +7,7 @@ if (!isset($_SESSION["iniciarSesion"]) || $_SESSION["iniciarSesion"] !== "ok") {
         <div class="col-sm-6"></div>
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
-            <li class="breadcrumb-item"><a href="inicio">Inicio</a></li>
+            <li class="breadcrumb-item"><a href="{{ url('/inicio') }}">Inicio</a></li>
             <li class="breadcrumb-item active">Panel de control</li>
           </ol>
         </div>
@@ -45,7 +36,7 @@ if (!isset($_SESSION["iniciarSesion"]) || $_SESSION["iniciarSesion"] !== "ok") {
 
         <!-- Usuarios -->
         <div class="col-lg-3 col-6">
-          <a href="index.php?ruta=usuarios" class="small-box bg-info enlace-dashboard">
+          <a href="{{ url('/usuarios') }}" class="small-box bg-info enlace-dashboard">
             <div class="inner">
               <h3>12</h3>
               <p>Usuarios Registrados</p>
@@ -58,7 +49,7 @@ if (!isset($_SESSION["iniciarSesion"]) || $_SESSION["iniciarSesion"] !== "ok") {
 
         <!-- Productos -->
         <div class="col-lg-3 col-6">
-          <a href="index.php?ruta=productos" class="small-box bg-success enlace-dashboard">
+          <a href="{{ url('/productos') }}" class="small-box bg-success enlace-dashboard">
             <div class="inner">
               <h3>350</h3>
               <p>Productos en Inventario</p>
@@ -71,7 +62,7 @@ if (!isset($_SESSION["iniciarSesion"]) || $_SESSION["iniciarSesion"] !== "ok") {
 
         <!-- Categorías -->
         <div class="col-lg-3 col-6">
-          <a href="index.php?ruta=categorias" class="small-box bg-warning enlace-dashboard">
+          <a href="{{ url('/categorias') }}" class="small-box bg-warning enlace-dashboard">
             <div class="inner">
               <h3>15</h3>
               <p>Categorías</p>
@@ -84,7 +75,7 @@ if (!isset($_SESSION["iniciarSesion"]) || $_SESSION["iniciarSesion"] !== "ok") {
 
         <!-- Facturación -->
         <div class="col-lg-3 col-6">
-          <a href="index.php?ruta=facturas" class="small-box bg-danger enlace-dashboard">
+          <a href="{{ url('/facturas') }}" class="small-box bg-danger enlace-dashboard">
             <div class="inner">
               <h3>$45M</h3>
               <p>Nueva Factura</p>

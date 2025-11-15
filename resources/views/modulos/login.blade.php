@@ -1,8 +1,3 @@
-<?php
-require_once __DIR__ . '/../../controladores/autenticacion.controlador.php';
-
-?>
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -26,7 +21,8 @@ require_once __DIR__ . '/../../controladores/autenticacion.controlador.php';
     <div class="card-body login-card-body">
       <p class="login-box-msg">Inicia sesión para continuar</p>
 
-      <form method="post">
+    <form method="POST" action="{{ route('login.procesar') }}">
+        @csrf
         <div class="input-group mb-3">
           <input type="email" name="correo" class="form-control" placeholder="Correo electrónico" required>
           <div class="input-group-append">
@@ -46,8 +42,6 @@ require_once __DIR__ . '/../../controladores/autenticacion.controlador.php';
             <button type="submit" class="btn btn-primary btn-block">Ingresar</button>
           </div>
         </div>
-
-        <?php ControladorAutenticacion::ctrIniciarSesion(); ?>
       </form>
     </div>
   </div>

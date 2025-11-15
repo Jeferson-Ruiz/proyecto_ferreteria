@@ -9,35 +9,29 @@ class ControladorPlantilla extends Controller
 {
     public function ctrPlantilla(Request $request)
     {
-        // Iniciar sesión si no está iniciada
-        if (!Session::has('iniciarSesion')) {
-            Session::put('iniciarSesion', ''); // opcional, inicializa
-        }
-
         // Obtener la ruta de la URL, por defecto 'inicio'
         $ruta = $request->query('ruta', 'inicio');
         $ruta = strtolower($ruta);
 
-        // Ruta pública: login
+        // RUTA pública: login
         if ($ruta === 'login') {
             return view('modulos.login');
         }
 
         // Si no hay sesión iniciada => redirigir al login
         if (Session::get('iniciarSesion') !== 'ok') {
-            return redirect('/login');
+            return redirect('/?ruta=login');
         }
 
         // Definir rutas permitidas por rol
         $permisos_por_rol = [
             1 => [ // ADMIN
                 "inicio","usuarios","personas","productos","categorias",
-                "perfiles","roles","facturas","listado-facturas","logout","login"
+                "roles","facturas","listado-facturas","logout","login"
             ],
             2 => [ // VENDEDOR
                 "inicio","productos","facturas","listado-facturas","logout","login"
             ]
-            // Agregar más roles si es necesario
         ];
 
         $rol_id = (int) Session::get('rol_id', 0);

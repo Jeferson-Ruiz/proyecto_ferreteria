@@ -8,124 +8,91 @@ use App\Models\ModeloUsuarios;
 class ControladorUsuarios extends Controller
 {
     /* =============================================
-       CREAR USUARIO
+       MOSTRAR USUARIOS (index)
     ============================================= */
-    public static function ctrCrearUsuario(Request $request)
+    public function ctrCrearUsuario()
     {
-        if ($request->has("nuevoNombre")) {
-
-            // Validaciones básicas
-            if (!preg_match('/^[a-zA-ZñÑáéíóúÁÉÍÓÚ ]+$/', $request->nuevoNombre)) {
-                echo "<script>alert('Nombre no válido'); window.location='/usuarios';</script>";
-                return;
-            }
-
-            if (!filter_var($request->nuevoCorreo, FILTER_VALIDATE_EMAIL)) {
-                echo "<script>alert('Correo no válido'); window.location='/usuarios';</script>";
-                return;
-            }
-
-            $tabla = "usuarios";
-
-            $datos = [
-                "nombre_completo" => trim($request->nuevoNombre),
-                "documento"       => trim($request->nuevoDocumento),
-                "correo"          => trim($request->nuevoCorreo),
-                "contrasena"      => password_hash($request->nuevaContrasena, PASSWORD_DEFAULT),
-                "rol_id"          => intval($request->nuevoRol)
-            ];
-
-            $respuesta = ModeloUsuarios::mdlIngresarUsuario($tabla, $datos);
-
-            if ($respuesta === "duplicado") {
-                echo "<script>alert('El correo o documento ya están registrados'); window.location='/usuarios';</script>";
-                return;
-            }
-
-            if ($respuesta == "ok") {
-                echo "<script>
-                    alert('Usuario registrado correctamente');
-                    window.location='/usuarios';
-                </script>";
-            } else {
-                echo "<script>
-                    alert('Error al registrar el usuario');
-                    window.location='/usuarios';
-                </script>";
-            }
-        }
+        $usuarios = ModeloUsuarios::mdlMostrarUsuarios("usuarios", null, null);
+        return view('modulos.usuarios', compact('usuarios'));
     }
 
     /* =============================================
-       MOSTRAR USUARIOS
+       CREAR USUARIO (store)
     ============================================= */
-    public static function ctrMostrarUsuarios($item = null, $valor = null)
+    public function store(Request $request)
     {
-        $tabla = "usuarios";
-        return ModeloUsuarios::mdlMostrarUsuarios($tabla, $item, $valor);
+        // Validaciones básicas
+        if (!preg_match('/^[a-zA-ZñÑáéíóúÁÉÍÓÚ ]+$/', $request->nuevoNombre)) {
+            return back()->with('error', 'Nombre no válido');
+        }
+
+        if (!filter_var($request->nuevoCorreo, FILTER_VALIDATE_EMAIL)) {
+            return back()->with('error', 'Correo no válido');
+        }
+
+        $datos = [
+            "nombre_completo" => trim($request->nuevoNombre),
+            "documento"       => trim($request->nuevoDocumento),
+            "correo"          => trim($request->nuevoCorreo),
+            "contrasena"      => password_hash($request->nuevaContrasena, PASSWORD_DEFAULT),
+            "rol_id"          => intval($request->nuevoRol)
+        ];
+
+        $respuesta = ModeloUsuarios::mdlIngresarUsuario("usuarios", $datos);
+
+        if ($respuesta === "duplicado") {
+            return back()->with('error', 'El correo o documento ya están registrados');
+        }
+
+        if ($respuesta == "ok") {
+            return redirect()->route('usuarios.index')->with('success', 'Usuario registrado correctamente');
+        }
+
+        return back()->with('error', 'Error al registrar el usuario');
     }
 
     /* =============================================
-       EDITAR USUARIO
+       EDITAR USUARIO (update)
     ============================================= */
-    public static function ctrEditarUsuario(Request $request)
+    public function ctrEditarUsuario(Request $request, $id)
     {
-        if ($request->has("editarNombre")) {
-
-            if (!filter_var($request->editarCorreo, FILTER_VALIDATE_EMAIL)) {
-                echo "<script>alert('Correo no válido'); window.location='/usuarios';</script>";
-                return;
-            }
-
-            $tabla = "usuarios";
-
-            $datos = [
-                "id"              => intval($request->idUsuario),
-                "nombre_completo" => trim($request->editarNombre),
-                "documento"       => trim($request->editarDocumento),
-                "correo"          => trim($request->editarCorreo),
-                "rol_id"          => intval($request->editarRol)
-            ];
-
-            $respuesta = ModeloUsuarios::mdlEditarUsuario($tabla, $datos);
-
-            if ($respuesta == "ok") {
-                echo "<script>
-                    alert('Usuario actualizado correctamente');
-                    window.location='/usuarios';
-                </script>";
-            } else {
-                echo "<script>
-                    alert('Error al actualizar el usuario');
-                    window.location='/usuarios';
-                </script>";
-            }
+        if (!filter_var($request->editarCorreo, FILTER_VALIDATE_EMAIL)) {
+            return back()->with('error', 'Correo no válido');
         }
+
+        $datos = [
+            "id"              => $id,
+            "nombre_completo" => trim($request->editarNombre),
+            "documento"       => trim($request->editarDocumento),
+            "correo"          => trim($request->editarCorreo),
+            "rol_id"          => intval($request->editarRol)
+        ];
+
+        // Agregar contraseña si se proporcionó
+        if (!empty($request->editarContrasena)) {
+            $datos["contrasena"] = password_hash($request->editarContrasena, PASSWORD_DEFAULT);
+        }
+
+        $respuesta = ModeloUsuarios::mdlEditarUsuario("usuarios", $datos);
+
+        if ($respuesta == "ok") {
+            return redirect()->route('usuarios.index')->with('success', 'Usuario actualizado correctamente');
+        }
+
+        return back()->with('error', 'Error al actualizar el usuario');
     }
 
     /* =============================================
-       BORRAR USUARIO
+       ELIMINAR USUARIO (destroy)
     ============================================= */
-    public static function ctrBorrarUsuario(Request $request)
+    public function ctrBorrarUsuario($id)
     {
-        if ($request->has("idUsuario")) {
+        $respuesta = ModeloUsuarios::mdlEliminarUsuario("usuarios", $id);
 
-            $tabla = "usuarios";
-            $id = intval($request->idUsuario);
-
-            $respuesta = ModeloUsuarios::mdlEliminarUsuario($tabla, $id);
-
-            if ($respuesta == "ok") {
-                echo "<script>
-                    alert('Usuario eliminado correctamente');
-                    window.location='/usuarios';
-                </script>";
-            } else {
-                echo "<script>
-                    alert('Error al eliminar el usuario');
-                    window.location='/usuarios';
-                </script>";
-            }
+        if ($respuesta == "ok") {
+            return redirect()->route('usuarios.index')->with('success', 'Usuario eliminado correctamente');
         }
+
+        return back()->with('error', 'Error al eliminar el usuario');
     }
 }

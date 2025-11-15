@@ -19,8 +19,8 @@ class ControladorAuth extends Controller
             $contrasena = trim($request->input('contrasena'));
 
             $usuario = DB::table('usuarios')
-                ->where('email', $correo)
-                ->first(); // fetch(PDO::FETCH_ASSOC)
+                ->where('correo', $correo) // ✅ CORREGIDO: 'email' → 'correo'
+                ->first();
 
             if ($usuario) {
 
@@ -29,25 +29,23 @@ class ControladorAuth extends Controller
                     // Guardar datos en sesión
                     Session::put('iniciarSesion', 'ok');
                     Session::put('id', $usuario->id);
-                    Session::put('nombre', $usuario->nombre);
-                    Session::put('email', $usuario->email);
-                    Session::put('rol', $usuario->rol);
+                    Session::put('nombre', $usuario->nombre_completo);
+                    Session::put('email', $usuario->correo); // ✅ También corregido aquí
+                    Session::put('rol', $usuario->rol_id);
 
-                    // Redirección según rol
-                    if ($usuario->rol === 'Administrador') {
+                    // Redirección según rol 
+                    if ($usuario->rol_id=== 1 ) { //rol 1 administrador
                         return redirect()->to('/inicio');
                     } else {
                         return redirect()->to('/productos');
                     }
 
                 } else {
-                    echo "<script>alert('Contraseña incorrecta'); window.location='/login';</script>";
-                    exit;
+                    return back()->with('error', 'Contraseña incorrecta');
                 }
 
             } else {
-                echo "<script>alert('Usuario no encontrado'); window.location='/login';</script>";
-                exit;
+                return back()->with('error', 'Usuario no encontrado');
             }
         }
     }
