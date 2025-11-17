@@ -35,7 +35,7 @@
                 <tr>
                   <td>{{ $key + 1 }}</td>
                   <td>{{ $value->nombre }}</td>
-                  <td>{{ $value->categoria ?? 'Sin categoría' }}</td>
+                  <td>{{ $value->categoria->nombre ?? 'Sin categoría' }}</td>
                   <td>{{ $value->stock }}</td>
                   <td>${{ number_format($value->precio_unitario, 2) }}</td>
                   <td>
