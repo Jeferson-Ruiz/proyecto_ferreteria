@@ -42,12 +42,14 @@
                     </a>
 
                     <!-- Eliminar factura -->
+                    <!-- Eliminar factura -->
                     <form method="POST" action="{{ route('facturas.eliminar') }}" style="display: inline;">
-                      @csrf
-                      <input type="hidden" name="idFactura" value="{{ $f->id }}">
-                      <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Eliminar factura?')">
-                        <i class="fas fa-trash"></i> Eliminar
-                      </button>
+                        @csrf
+                        @method('DELETE')  <!-- ← Esto convierte POST a DELETE -->
+                        <input type="hidden" name="idFactura" value="{{ $f->id }}">
+                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Eliminar factura?')">
+                            <i class="fas fa-trash"></i> Eliminar
+                        </button>
                     </form>
                   </td>
                 </tr>
