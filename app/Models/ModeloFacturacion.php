@@ -16,7 +16,6 @@ class ModeloFacturacion
                 "numero_factura"     => $datos["numero_factura"],
                 "cliente_nombre"     => $datos["cliente_nombre"],
                 "cliente_documento"  => $datos["cliente_documento"],
-                "usuario_id"         => $datos["usuario_id"],
                 "total"              => $datos["total"],
                 "fecha"              => now()
             ]);
@@ -39,7 +38,9 @@ class ModeloFacturacion
                 "factura_id"      => $datos["factura_id"],
                 "producto_id"     => $datos["producto_id"],
                 "cantidad"        => $datos["cantidad"],
-                "precio_unitario" => $datos["precio_unitario"]
+                "precio_unitario" => $datos["precio_unitario"],
+                "subtotal" => $datos["subtotal"] // ✅ AGREGAR ESTA LÍNEA
+
             ]);
 
         } catch (\Exception $e) {

@@ -15,66 +15,60 @@ class ControladorFacturacion extends Controller
     /*=============================================
     CREAR FACTURA
     =============================================*/
-    public static function ctrCrearFactura(Request $request)
-    {
-        if ($request->has("productos") && !empty($request->productos) && 
-            $request->has("cliente_nombre") && $request->has("cliente_documento")) {
+   public static function ctrCrearFactura(Request $request)
+{
+    if ($request->has("productos") && !empty($request->productos) && 
+        $request->has("cliente_nombre") && $request->has("cliente_documento")) {
 
-            $productos = json_decode($request->productos, true);
-            $cliente_nombre = trim($request->cliente_nombre);
-            $cliente_documento = trim($request->cliente_documento);
-            $usuario_id = Session::get("id_usuario");
-            $numero_factura = "FAC-" . rand(1000, 9999);
+        $productos = json_decode($request->productos, true);
+        $cliente_nombre = trim($request->cliente_nombre);
+        $cliente_documento = trim($request->cliente_documento);
+        $numero_factura = "FAC-" . rand(1000, 9999);
 
-            // Calcular total
-            $total = 0;
+        // Calcular total
+        $total = 0;
+        foreach ($productos as $p) {
+            $total += $p["cantidad"] * $p["precio_unitario"];
+        }
+
+        // ✅ SOLUCIÓN: Quitar usuario_id
+        $datosFactura = [
+            "numero_factura" => $numero_factura,
+            "cliente_nombre" => $cliente_nombre,
+            "cliente_documento" => $cliente_documento,
+            "total" => $total,
+            "fecha" => now()  // ✅ Agregar fecha aquí también
+        ];
+
+        $idFactura = ModeloFacturacion::mdlCrearFactura("facturas", $datosFactura);
+
+        if ($idFactura > 0) {
+            // Guardar detalle (CORREGIR el campo subtotal)
             foreach ($productos as $p) {
-                $total += $p["cantidad"] * $p["precio_unitario"];
+                $detalle = [
+                    "factura_id" => $idFactura,
+                    "producto_id" => $p["id"],
+                    "cantidad" => $p["cantidad"],
+                    "precio_unitario" => $p["precio_unitario"],
+                            "subtotal" => $p["cantidad"] * $p["precio_unitario"] // ✅ AGREGAR ESTO
+
+                    // ❌ QUITAR "subtotal" - no existe en tu modelo
+                ];
+                ModeloFacturacion::mdlCrearDetalle("detalle_factura", $detalle);
             }
 
-            // Guardar factura
-            $datosFactura = [
-                "numero_factura" => $numero_factura,
-                "cliente_nombre" => $cliente_nombre,
-                "cliente_documento" => $cliente_documento,
-                "usuario_id" => $usuario_id,
-                "total" => $total
-            ];
+            // Generar PDF
+            self::generarFacturaPDF($numero_factura, $cliente_nombre, $productos, $total);
 
-            $idFactura = ModeloFacturacion::mdlCrearFactura("facturas", $datosFactura);
-
-            if ($idFactura > 0) {
-
-                // Guardar detalle
-                foreach ($productos as $p) {
-                    $detalle = [
-                        "factura_id" => $idFactura,
-                        "producto_id" => $p["id"],
-                        "cantidad" => $p["cantidad"],
-                        "precio_unitario" => $p["precio_unitario"],
-                        "subtotal" => $p["cantidad"] * $p["precio_unitario"]
-                    ];
-                    ModeloFacturacion::mdlCrearDetalle("detalle_factura", $detalle);
-                }
-
-                // Generar PDF
-                self::generarFacturaPDF($numero_factura, $cliente_nombre, $productos, $total);
-
-                return response()->json([
-                    'success' => true,
-                    'message' => '✅ Factura generada correctamente',
-                    'pdf_url' => url("factura_pdf/$numero_factura.pdf"),
-                    'redirect' => route('listado.facturas')
-                ]);
-
-            } else {
-                return response()->json([
-                    'success' => false,
-                    'message' => '❌ Error al guardar la factura'
-                ]);
-            }
+            return redirect()->route('facturas.index')
+                ->with('success', '✅ La factura fue creada con éxito');
+         } else {
+            // ✅ CAMBIO: Redirigir con error
+            return redirect()->route('facturas.index')
+                ->with('error', '❌ Error al guardar la factura');
         }
     }
+}
 
     /*=============================================
     ELIMINAR FACTURA
@@ -165,12 +159,12 @@ class ControladorFacturacion extends Controller
     /*=============================================
     MOSTRAR FACTURAS (wrappers)
     =============================================*/
-    public static function ctrMostrarFacturasConCliente()
+    public function ctrMostrarFacturasConCliente()
     {
         return ModeloFacturacion::mdlMostrarFacturasConCliente();
     }
 
-    public static function ctrMostrarFacturas()
+    public function ctrMostrarFacturas()
     {
         return ModeloFacturacion::mdlMostrarFacturas();
     }

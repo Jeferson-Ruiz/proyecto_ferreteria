@@ -9,6 +9,25 @@
   </section>
 
   <section class="content">
+
+     @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    @endif
+
+    @if(session('error'))
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ session('error') }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    @endif
+
     <div class="card">
       <div class="card-header bg-primary text-white">
         <h3 class="card-title">🧾 Crear Factura POS</h3>
@@ -76,100 +95,128 @@
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-  const productos = @json($productos);
-  const buscarInput = document.getElementById("buscarProducto");
-  const lista = document.getElementById("listaProductos");
-  const tbody = document.querySelector("#tablaDetalle tbody");
-  const totalEl = document.getElementById("totalFactura");
-  const inputJSON = document.getElementById("productosJSON");
-  const form = document.getElementById("formFactura");
-  const btnGuardar = document.getElementById("btnGuardar");
-  let carrito = [];
+    const productos = @json($productos);
+    const buscarInput = document.getElementById("buscarProducto");
+    const lista = document.getElementById("listaProductos");
+    const tbody = document.querySelector("#tablaDetalle tbody");
+    const totalEl = document.getElementById("totalFactura");
+    const inputJSON = document.getElementById("productosJSON");
+    const form = document.getElementById("formFactura");
+    const btnGuardar = document.getElementById("btnGuardar");
+    let carrito = [];
 
-  buscarInput.addEventListener("keyup", () => {
-    const texto = buscarInput.value.toLowerCase();
-    lista.innerHTML = "";
-    if (texto.trim() === "") return;
-    const filtrados = productos.filter(p => p.nombre.toLowerCase().includes(texto));
-    filtrados.forEach(p => {
-      const item = document.createElement("button");
-      item.type = "button";
-      item.className = "list-group-item list-group-item-action";
-      item.textContent = `${p.nombre} - $${p.precio_unitario}`;
-      item.onclick = () => agregarProducto(p);
-      lista.appendChild(item);
+    // Buscar productos
+    buscarInput.addEventListener("keyup", () => {
+        const texto = buscarInput.value.toLowerCase();
+        lista.innerHTML = "";
+        if (texto.trim() === "") return;
+        
+        const filtrados = productos.filter(p => 
+            p.nombre.toLowerCase().includes(texto)
+        );
+        
+        filtrados.forEach(p => {
+            const item = document.createElement("button");
+            item.type = "button";
+            item.className = "list-group-item list-group-item-action";
+            item.textContent = `${p.nombre} - $${p.precio_unitario}`;
+            item.onclick = () => agregarProducto(p);
+            lista.appendChild(item);
+        });
     });
-  });
 
-  function agregarProducto(prod) {
-    const existe = carrito.find(p => p.id === prod.id);
-    if (existe) {
-      existe.cantidad++;
-    } else {
-      carrito.push({ id: prod.id, nombre: prod.nombre, precio_unitario: parseFloat(prod.precio_unitario), cantidad: 1 });
+    function agregarProducto(prod) {
+        const existe = carrito.find(p => p.id === prod.id);
+        if (existe) {
+            existe.cantidad++;
+        } else {
+            carrito.push({
+                id: prod.id,
+                nombre: prod.nombre, 
+                precio_unitario: parseFloat(prod.precio_unitario),
+                cantidad: 1
+            });
+        }
+        renderCarrito();
+        lista.innerHTML = "";
+        buscarInput.value = "";
     }
-    renderCarrito(); lista.innerHTML = ""; buscarInput.value = "";
-  }
 
-  function renderCarrito() {
-    tbody.innerHTML = "";
-    let total = 0;
-    carrito.forEach((p,i) => {
-      const subtotal = p.cantidad * p.precio_unitario;
-      total += subtotal;
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td>${p.nombre}</td>
-        <td><input type="number" min="1" value="${p.cantidad}" class="form-control form-control-sm" onchange="actualizarCantidad(${i}, this.value)"></td>
-        <td>$${p.precio_unitario.toFixed(2)}</td>
-        <td>$${subtotal.toFixed(2)}</td>
-        <td><button type="button" class="btn btn-danger btn-sm" onclick="eliminarProducto(${i})">X</button></td>
-      `;
-      tbody.appendChild(tr);
+    function renderCarrito() {
+        tbody.innerHTML = "";
+        let total = 0;
+        
+        carrito.forEach((p, i) => {
+            const subtotal = p.cantidad * p.precio_unitario;
+            total += subtotal;
+            
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+                <td>${p.nombre}</td>
+                <td>
+                    <input type="number" min="1" value="${p.cantidad}" 
+                           class="form-control form-control-sm" 
+                           onchange="actualizarCantidad(${i}, this.value)">
+                </td>
+                <td>$${p.precio_unitario.toFixed(2)}</td>
+                <td>$${subtotal.toFixed(2)}</td>
+                <td>
+                    <button type="button" class="btn btn-danger btn-sm" 
+                            onclick="eliminarProducto(${i})">X</button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+        
+        totalEl.textContent = total.toFixed(2);
+        inputJSON.value = JSON.stringify(carrito);
+    }
+
+    window.eliminarProducto = (index) => {
+        carrito.splice(index, 1);
+        renderCarrito();
+    };
+
+    window.actualizarCantidad = (index, cantidad) => {
+        const nuevaCantidad = parseInt(cantidad) || 1;
+        carrito[index].cantidad = nuevaCantidad;
+        renderCarrito();
+    };
+
+    // ✅ SOLUCIÓN CORREGIDA - Formulario tradicional
+    form.addEventListener("submit", function(e) {
+        e.preventDefault();
+        
+        // Validaciones básicas
+        if (carrito.length === 0) {
+            alert('❌ Debe agregar al menos un producto');
+            return;
+        }
+
+        const clienteNombre = document.querySelector('input[name="cliente_nombre"]').value.trim();
+        const clienteDocumento = document.querySelector('input[name="cliente_documento"]').value.trim();
+        
+        if (!clienteNombre || !clienteDocumento) {
+            alert('❌ Complete todos los datos del cliente');
+            return;
+        }
+
+        // Actualizar el hidden input
+        inputJSON.value = JSON.stringify(carrito);
+        
+        // Deshabilitar botón
+        btnGuardar.disabled = true;
+        btnGuardar.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando...';
+
+        // ✅ ENVÍO TRADICIONAL - Sin Fetch API
+        this.submit();
+    
+        // Mostrar alerta después de enviar
+        setTimeout(() => {
+            alert('✅ La factura fue creada con éxito');
+            // El botón se reseteará cuando la página recargue
+        }, 100);
     });
-    totalEl.textContent = total.toFixed(2);
-    inputJSON.value = JSON.stringify(carrito);
-  }
-
-  window.eliminarProducto = (index) => { carrito.splice(index,1); renderCarrito(); };
-  window.actualizarCantidad = (index, cantidad) => { carrito[index].cantidad = parseInt(cantidad); renderCarrito(); };
-
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    btnGuardar.disabled = true;
-    btnGuardar.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
-
-    try {
-      const response = await fetch("{{ route('facturas.crear') }}", {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-        },
-        body: JSON.stringify({
-          productos: carrito,
-          cliente_nombre: document.querySelector('input[name="cliente_nombre"]').value,
-          cliente_documento: document.querySelector('input[name="cliente_documento"]').value
-        })
-      });
-
-      const result = await response.json();
-      
-      if (result.success) {
-        alert(result.message);
-        if (result.pdf_url) window.open(result.pdf_url, '_blank');
-        window.location.href = result.redirect;
-      } else {
-        alert(result.message);
-        btnGuardar.disabled = false;
-        btnGuardar.innerHTML = '<i class="fas fa-save"></i> Guardar Factura';
-      }
-    } catch (error) {
-      alert('Error al procesar la factura');
-      btnGuardar.disabled = false;
-      btnGuardar.innerHTML = '<i class="fas fa-save"></i> Guardar Factura';
-    }
-  });
 });
 </script>
 @endsection

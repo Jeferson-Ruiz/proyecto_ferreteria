@@ -52,7 +52,7 @@ Route::delete('/roles/{id}', [ControladorRoles::class, 'ctrBorrarRol'])->name('r
 // RUTAS Fctura:
 Route::get('/facturas', [ControladorFacturacion::class, 'ctrCrearFacturaView'])->name('facturas.index');
 Route::post('/facturas/crear', [ControladorFacturacion::class, 'ctrCrearFactura'])->name('facturas.crear');
-Route::get('/facturas/eliminar', [ControladorFacturacion::class, 'ctrEliminarFactura'])->name('facturas.eliminar');
+Route::delete('/facturas/eliminar', [ControladorFacturacion::class, 'ctrEliminarFactura'])->name('facturas.eliminar');
 Route::get('/listado-facturas', function () {
     $facturas = \App\Models\ModeloFacturacion::mdlMostrarFacturasConCliente();
     return view('modulos.listado-facturas', compact('facturas'));
