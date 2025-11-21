@@ -7,6 +7,8 @@ use App\Http\Controllers\ControladorUsuarios;
 use App\Http\Controllers\ControladorRoles;
 use App\Http\Controllers\ControladorFacturacion;
 use App\Http\Controllers\ControladorAuth;
+use App\Http\Controllers\ControladorProveedores;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -57,3 +59,12 @@ Route::get('/listado-facturas', function () {
     $facturas = \App\Models\ModeloFacturacion::mdlMostrarFacturasConCliente();
     return view('modulos.listado-facturas', compact('facturas'));
 })->name('listado.facturas');
+
+
+//Rutas Proveedores
+Route::post('/proveedores', [ControladorProveedores::class, 'crearProveedor']);
+Route::get('/proveedores', [ControladorProveedores::class, 'mostrarProveedores']);
+Route::get('/proveedores/{id}', [ControladorProveedores::class, 'mostrarProveedores']);
+Route::put('/proveedores/{id}', [ControladorProveedores::class, 'editarProveedor']);
+Route::delete('/proveedores/{id}', [ControladorProveedores::class, 'eliminarProveedor']);
+
