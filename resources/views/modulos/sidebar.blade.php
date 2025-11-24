@@ -48,6 +48,14 @@
           </a>
         </li>
 
+        <!-- PROVEEDORES -->
+        <li class="nav-item">
+          <a href="{{ url('/proveedores') }}" class="nav-link">
+           <i class="nav-icon fas fa-truck"></i>
+            <p>Proveedores</p>
+          </a>
+        </li>
+
         <!-- FACTURACIÓN -->
         <li class="nav-item has-treeview">
           <a href="#" class="nav-link">

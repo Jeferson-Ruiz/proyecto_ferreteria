@@ -5,6 +5,7 @@ use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\ControladorUsuarios;
 use App\Http\Controllers\ControladorRoles;
+use App\Http\Controllers\ControladorProveedores;
 use App\Http\Controllers\ControladorFacturacion;
 use App\Http\Controllers\ControladorAuth;
 
@@ -43,13 +44,28 @@ Route::post('/usuarios/crear', [ControladorUsuarios::class, 'store'])->name('usu
 Route::get('/usuarios/editar/{id}', [ControladorUsuarios::class, 'edit'])->name('usuarios.edit');
 Route::put('/usuarios/editar/{id}', [ControladorUsuarios::class, 'ctrEditarUsuario'])->name('usuarios.update');
 Route::delete('/usuarios/eliminar/{id}', [ControladorUsuarios::class, 'ctrBorrarUsuario'])->name('usuarios.destroy');
-//
+
+// Ruta roles
 Route::get('/roles', [ControladorRoles::class, 'ctrMostrarRoles'])->name('roles.index');
 Route::post('/roles', [ControladorRoles::class, 'ctrCrearRol'])->name('roles.store');
 Route::put('/roles/{id}', [ControladorRoles::class, 'ctrEditarRol'])->name('roles.update');
 Route::delete('/roles/{id}', [ControladorRoles::class, 'ctrBorrarRol'])->name('roles.destroy');
 
-// RUTAS Fctura:
+
+//Ruta proveedores
+// Ruta para la vista
+Route::get('/proveedores', function () {
+    $proveedores = App\Models\ModeloProveedores::mdlMostrarProveedores('proveedores', null, null);
+    return view('modulos.proveedores', compact('proveedores'));
+})->name('proveedores.index');
+
+// Rutas CRUD con nombres
+Route::post('/proveedores/crear', [ControladorProveedores::class, 'crear'])->name('proveedores.store');
+Route::put('/proveedores/actualizar/{id}', [ControladorProveedores::class, 'actualizar'])->name('proveedores.update');
+Route::delete('/proveedores/eliminar/{id}', [ControladorProveedores::class, 'eliminar'])->name('proveedores.destroy');
+
+
+// RUTAS Factura:
 Route::get('/facturas', [ControladorFacturacion::class, 'ctrCrearFacturaView'])->name('facturas.index');
 Route::post('/facturas/crear', [ControladorFacturacion::class, 'ctrCrearFactura'])->name('facturas.crear');
 Route::delete('/facturas/eliminar', [ControladorFacturacion::class, 'ctrEliminarFactura'])->name('facturas.eliminar');
