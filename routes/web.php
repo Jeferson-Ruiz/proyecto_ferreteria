@@ -48,6 +48,7 @@ Route::delete('/usuarios/eliminar/{id}', [ControladorUsuarios::class, 'ctrBorrar
 // Ruta roles
 Route::get('/roles', [ControladorRoles::class, 'ctrMostrarRoles'])->name('roles.index');
 Route::post('/roles', [ControladorRoles::class, 'ctrCrearRol'])->name('roles.store');
+Route::get('/roles/buscar', [ControladorRoles::class, 'buscar'])->name('roles.buscar');
 Route::put('/roles/{id}', [ControladorRoles::class, 'ctrEditarRol'])->name('roles.update');
 Route::delete('/roles/{id}', [ControladorRoles::class, 'ctrBorrarRol'])->name('roles.destroy');
 

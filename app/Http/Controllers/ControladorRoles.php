@@ -23,7 +23,9 @@ class ControladorRoles extends Controller
     {
         if (!empty($request->nuevoRol)) {
 
-            $datos = ["nombre" => trim($request->nuevoRol)];
+            $datos = ["nombre" => trim($request->nuevoRol),
+                    "descripcion" => trim($request->nuevaDescripcion)];
+
 
             // Validar que el rol no exista
             $rolExistente = ModeloRoles::mdlMostrarRoles("nombre", $datos["nombre"]);
@@ -41,6 +43,23 @@ class ControladorRoles extends Controller
         return back()->with('error', 'No se pudo crear el rol');
     }
 
+
+    /* ======================================
+    Buscar Roles
+    ====================================== */
+    public function buscar(Request $solicitud)
+    {
+        $termino = $solicitud->input('termino');
+        
+        if ($termino) {
+            $roles = ModeloRoles::mdlBuscarRol($termino);
+        } else {
+            $roles = ModeloRoles::mdlMostrarRoles();
+        }
+        
+        return view('modulos.roles', compact('roles'));
+    }
+
     /* ======================================
        Editar Rol (update)
     ====================================== */
@@ -50,7 +69,9 @@ class ControladorRoles extends Controller
 
             $datos = [
                 "id"     => $id,
-                "nombre" => trim($request->editarRol)
+                "nombre" => trim($request->editarRol),
+                "descripcion" => trim($request->editarDescripcion)
+
             ];
 
             $respuesta = ModeloRoles::mdlEditarRol("roles", $datos);

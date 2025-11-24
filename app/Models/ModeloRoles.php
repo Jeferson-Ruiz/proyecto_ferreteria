@@ -27,12 +27,27 @@ class ModeloRoles
     public static function mdlIngresarRol($tabla, $datos)
     {
         $insert = DB::table($tabla)->insert([
-            'nombre' => $datos['nombre']
+            'nombre' => $datos['nombre'],
+            'descripcion' => $datos['descripcion']
+
         ]);
 
         return $insert ? "ok" : "error";
     }
 
+    /* ======================================
+        Buscar Rol (nombre o descripción)
+    ====================================== */
+    public static function mdlBuscarRol($termino)
+    {
+        return DB::table("roles")
+            ->where('nombre', 'LIKE', '%' . $termino . '%')
+            ->orWhere('descripcion', 'LIKE', '%' . $termino . '%')
+            ->orderBy("id", "DESC")
+            ->get();
+    }
+
+    
     /* ======================================
        Editar Rol
     ====================================== */
@@ -41,7 +56,9 @@ class ModeloRoles
         $update = DB::table($tabla)
             ->where('id', $datos['id'])
             ->update([
-                'nombre' => $datos['nombre']
+                'nombre' => $datos['nombre'],
+                'descripcion' => $datos['descripcion']
+
             ]);
 
         return $update ? "ok" : "error";
