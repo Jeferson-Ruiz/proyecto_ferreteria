@@ -108,4 +108,21 @@ class ProductoController extends Controller
 
         return back()->with("error", "No se pudo eliminar el producto");
     }
+
+    /*=============================================
+    BUSCAR PRODUCTOS
+    ======================================*/
+    public function buscar(Request $solicitud)
+    {
+        $termino = $solicitud->input('termino');
+        
+        if ($termino) {
+            $productos = Producto::mdlBuscarProducto($termino);
+        } else {
+            $productos = Producto::mdlMostrarProductos();
+        }
+        
+        $categorias = Categoria::mdlMostrarCategorias(); // Para el select de categorías
+        return view('modulos.productos', compact('productos', 'categorias'));
+}
 }

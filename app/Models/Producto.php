@@ -71,4 +71,18 @@ class Producto extends Model
         }
         return "error";
     }
+
+    /*=============================================
+    BUSCAR PRODUCTO (nombre o categoría)
+    ======================================*/
+    public static function mdlBuscarProducto($termino)
+    {
+        return self::with('categoria')
+            ->where('nombre', 'LIKE', '%' . $termino . '%')
+            ->orWhereHas('categoria', function($query) use ($termino) {
+                $query->where('nombre', 'LIKE', '%' . $termino . '%');
+            })
+            ->orderBy('id', 'DESC')
+            ->get();
+    }
 }

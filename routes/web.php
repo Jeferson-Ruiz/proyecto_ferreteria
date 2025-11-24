@@ -36,6 +36,7 @@ Route::post('/categorias/eliminar', [CategoriaController::class, 'eliminar'])->n
 Route::get('/productos', [ProductoController::class, 'mostrar'])->name('productos.index');
 Route::post('/productos/crear', [ProductoController::class, 'crear'])->name('productos.crear');
 Route::post('/productos/editar', [ProductoController::class, 'editar'])->name('productos.editar');
+Route::get('/productos/buscar', [ProductoController::class, 'buscar'])->name('productos.buscar');
 Route::post('/productos/eliminar', [ProductoController::class, 'eliminar'])->name('productos.eliminar');
 
 // RUTAS usuarios:
