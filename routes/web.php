@@ -29,6 +29,7 @@ Route::get('/inicio', function () { return view('modulos.inicio'); })->name('ini
 Route::get('/categorias', [CategoriaController::class, 'mostrar'])->name('categorias.index');
 Route::post('/categorias/crear', [CategoriaController::class, 'crear'])->name('categorias.crear');
 Route::post('/categorias/editar', [CategoriaController::class, 'editar'])->name('categorias.editar');
+Route::get('/categorias/buscar', [CategoriaController::class, 'buscar'])->name('categorias.buscar');
 Route::post('/categorias/eliminar', [CategoriaController::class, 'eliminar'])->name('categorias.eliminar');
 
 // RUTAS productos:

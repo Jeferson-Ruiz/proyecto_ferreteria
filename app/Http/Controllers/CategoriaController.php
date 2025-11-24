@@ -22,6 +22,7 @@ class CategoriaController extends Controller
     public function crear(Request $request)
     {
         $nombre = trim($request->input('nuevaCategoria'));
+        $descripcion = trim($request->input('nuevaDescripcion'));
 
         if ($nombre) {
             // Validar duplicados
@@ -30,7 +31,10 @@ class CategoriaController extends Controller
                 return back()->with('error', '⚠️ La categoría ya existe');
             }
 
-            $respuesta = Categoria::mdlIngresarCategoria(['nombre' => $nombre]);
+            $respuesta = Categoria::mdlIngresarCategoria([
+                'nombre' => $nombre,
+                'descripcion' => $descripcion
+            ]);
             if ($respuesta == "ok") {
                 return redirect()->route('categorias.index')->with('success', '✅ Categoría creada correctamente');
             }
@@ -47,6 +51,7 @@ class CategoriaController extends Controller
         $datos = [
             'id' => $request->input('idCategoria'),
             'nombre' => trim($request->input('editarCategoria')),
+            'descripcion' => trim($request->input('editarDescripcion'))
         ];
 
         $respuesta = Categoria::mdlEditarCategoria($datos);
@@ -70,5 +75,21 @@ class CategoriaController extends Controller
         }
 
         return back()->with('error', 'No se pudo eliminar la categoría');
+    }
+
+    /*=============================================
+    BUSCAR CATEGORÍAS
+    =============================================*/
+    public function buscar(Request $solicitud)
+    {
+        $termino = $solicitud->input('termino');
+        
+        if ($termino) {
+            $categorias = Categoria::mdlBuscarCategoria($termino);
+        } else {
+            $categorias = Categoria::mdlMostrarCategorias();
+        }
+        
+        return view('modulos.categorias', compact('categorias'));
     }
 }

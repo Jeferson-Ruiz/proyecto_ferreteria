@@ -8,7 +8,7 @@ class Categoria extends Model
 {
     protected $table = 'categorias'; // tabla exacta
     public $timestamps = false;      // sin created_at ni updated_at
-    protected $fillable = ['nombre']; // campos asignables
+    protected $fillable = ['nombre', 'descripcion']; // campos asignables
 
     /*=============================================
     MOSTRAR CATEGORÍAS
@@ -27,7 +27,10 @@ class Categoria extends Model
     =============================================*/
     public static function mdlIngresarCategoria($datos)
     {
-        return self::create(['nombre' => $datos['nombre']]) ? "ok" : "error";
+        return self::create([
+            'nombre' => $datos['nombre'],
+            'descripcion' => $datos['descripcion']
+        ]) ? "ok" : "error";
     }
 
     /*=============================================
@@ -37,7 +40,10 @@ class Categoria extends Model
     {
         $categoria = self::find($datos['id']);
         if ($categoria) {
-            return $categoria->update(['nombre' => $datos['nombre']]) ? "ok" : "error";
+            return $categoria->update([
+                'nombre' => $datos['nombre'],
+                'descripcion' => $datos['descripcion']
+            ]) ? "ok" : "error";
         }
         return "error";
     }
@@ -52,5 +58,16 @@ class Categoria extends Model
             return $categoria->delete() ? "ok" : "error";
         }
         return "error";
+    }
+
+    /*=============================================
+    BUSCAR CATEGORÍA (nombre o descripción)
+    =============================================*/
+    public static function mdlBuscarCategoria($termino)
+    {
+        return self::where('nombre', 'LIKE', '%' . $termino . '%')
+            ->orWhere('descripcion', 'LIKE', '%' . $termino . '%')
+            ->orderBy('id', 'DESC')
+            ->get();
     }
 }
