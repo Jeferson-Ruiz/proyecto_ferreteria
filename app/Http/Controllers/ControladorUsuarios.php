@@ -33,10 +33,10 @@ class ControladorUsuarios extends Controller
         }
 
         $datos = [
-            "nombre_completo" => trim($request->nuevoNombre),
-            "documento"       => trim($request->nuevoDocumento),
-            "correo"          => trim($request->nuevoCorreo),
-            "contrasena"      => password_hash($request->nuevaContrasena, PASSWORD_DEFAULT),
+            "nombre_completo" => strtolower(trim($request->nuevoNombre)),
+            "documento"=> trim($request->nuevoDocumento),
+            "correo"=> strtolower(trim($request->nuevoCorreo)),
+            "contrasena"=> password_hash($request->nuevaContrasena, PASSWORD_DEFAULT),
             "rol_id"          => intval($request->nuevoRol)
         ];
 
@@ -63,10 +63,10 @@ class ControladorUsuarios extends Controller
         }
 
         $datos = [
-            "id"              => $id,
-            "nombre_completo" => trim($request->editarNombre),
+            "id"=> $id,
+            "nombre_completo" => strtolower(trim($request->editarNombre)),
             "documento"       => trim($request->editarDocumento),
-            "correo"          => trim($request->editarCorreo),
+            "correo"          => strtolower(trim($request->editarCorreo)),
             "rol_id"          => intval($request->editarRol)
         ];
 

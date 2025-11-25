@@ -30,13 +30,33 @@
 }
 </style>
 
+
 <!-- 🔹 Envoltura necesaria para AdminLTE -->
 <div class="content-wrapper">
   <section class="content">
     <div class="container-fluid mt-4">
       <div class="card shadow-lg p-4">
         <h2 class="text-center mb-4 fw-bold">Gestión de Usuarios</h2>
+        
 
+      @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+          <strong>¡Éxito!</strong> {{ session('success') }}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+      @endif
+
+      @if(session('error'))
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+          <strong>¡Error!</strong> {{ session('error') }}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+      @endif
+              
         <!-- FORMULARIO DE REGISTRO -->
         <form method="POST" action="{{ route('usuarios.store') }}" class="mb-4">
             @csrf
@@ -86,9 +106,9 @@
                         @foreach($usuarios as $key => $usuario)
                             <tr>
                                 <td>{{ $key + 1 }}</td>
-                                <td>{{ $usuario->nombre_completo ?? '' }}</td>
+                                <td>{{ ucwords($usuario->nombre_completo ?? '' )}}</td>
                                 <td>{{ $usuario->documento ?? '' }}</td>
-                                <td>{{ $usuario->correo ?? '' }}</td>
+                                <td>{{ ucwords ($usuario->correo ?? '') }}</td>
                                 <td>{{ $usuario->rol ?? 'Sin rol' }}</td>
                                 <td>
                                     <button 
