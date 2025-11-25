@@ -7,6 +7,7 @@ use App\Http\Controllers\ControladorUsuarios;
 use App\Http\Controllers\ControladorRoles;
 use App\Http\Controllers\ControladorProveedores;
 use App\Http\Controllers\ControladorFacturacion;
+use App\Http\Controllers\ControladorClienteMayorista;
 use App\Http\Controllers\ControladorAuth;
 
 Route::get('/', function () {
@@ -62,11 +63,18 @@ Route::get('/proveedores', function () {
     return view('modulos.proveedores', compact('proveedores'));
 })->name('proveedores.index');
 
-// Rutas CRUD con nombres
 Route::post('/proveedores/crear', [ControladorProveedores::class, 'crear'])->name('proveedores.store');
 Route::put('/proveedores/actualizar/{id}', [ControladorProveedores::class, 'actualizar'])->name('proveedores.update');
 Route::delete('/proveedores/eliminar/{id}', [ControladorProveedores::class, 'eliminar'])->name('proveedores.destroy');
 
+
+// Rutas cliente mayorista
+Route::get('/clientes-mayorista', [ControladorClienteMayorista::class, 'mostrar'])->name('clientes-mayorista.index');
+Route::post('/clientes-mayorista/crear', [ControladorClienteMayorista::class, 'crear'])->name('clientes-mayorista.crear');
+Route::post('/clientes-mayorista/editar', [ControladorClienteMayorista::class, 'editar'])->name('clientes-mayorista.editar');
+Route::post('/clientes-mayorista/eliminar', [ControladorClienteMayorista::class, 'eliminar'])->name('clientes-mayorista.eliminar');
+Route::get('/clientes-mayorista/buscar', [ControladorClienteMayorista::class, 'buscar'])->name('clientes-mayorista.buscar');
+Route::post('/clientes-mayorista/actualizar-deuda', [ControladorClienteMayorista::class, 'actualizarDeuda'])->name('clientes-mayorista.actualizar-deuda');
 
 // RUTAS Factura:
 Route::get('/facturas', [ControladorFacturacion::class, 'ctrCrearFacturaView'])->name('facturas.index');

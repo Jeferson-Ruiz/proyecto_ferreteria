@@ -56,6 +56,15 @@
           </a>
         </li>
 
+          <!-- Clientes -->
+        <li class="nav-item">
+          <a href="{{ url('/clientes-mayorista') }}" class="nav-link">
+            <i class="nav-icon fas fa-user-tie"></i>
+            <p>Clientes</p>
+          </a>
+        </li>
+
+
         <!-- FACTURACIÓN -->
         <li class="nav-item has-treeview">
           <a href="#" class="nav-link">
