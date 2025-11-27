@@ -1,19 +1,21 @@
 <?php
 
 namespace App\Models;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 
 class ModeloUsuarios extends Model
 { 
+    protected $table = 'usuarios';
+    public $timestamps = false;
+    protected $fillable = ['nombre_completo', 'documento', 'correo', 'contrasena', 'rol_id'];
+
     /*=============================================
     CREAR USUARIO
     =============================================*/
     public static function mdlIngresarUsuario($tabla, $datos)
     {
         // Verificar duplicados
-        $check = DB::table($tabla)
-            ->where('documento', $datos['documento'])
+        $check = self::where('documento', $datos['documento'])
             ->orWhere('correo', $datos['correo'])
             ->first();
 
@@ -21,7 +23,7 @@ class ModeloUsuarios extends Model
             return "duplicado";
         }
 
-        $insert = DB::table($tabla)->insert([
+        $insert = self::create([
             'nombre_completo' => $datos['nombre_completo'],
             'documento'       => $datos['documento'],
             'correo'          => $datos['correo'],
@@ -38,13 +40,13 @@ class ModeloUsuarios extends Model
     public static function mdlMostrarUsuarios($tabla, $item, $valor)
     {
         if ($item != null) {
-            return DB::table($tabla . " AS u")
+            return self::from($tabla . " AS u")
                 ->join("roles AS r", "u.rol_id", "=", "r.id")
                 ->select("u.*", "r.nombre AS rol")
                 ->where("u.$item", $valor)
                 ->first();
         } else {
-            return DB::table($tabla . " AS u")
+            return self::from($tabla . " AS u")
                 ->join("roles AS r", "u.rol_id", "=", "r.id")
                 ->select("u.*", "r.nombre AS rol")
                 ->orderBy("u.id", "DESC")
@@ -58,8 +60,7 @@ class ModeloUsuarios extends Model
     public static function mdlEditarUsuario($tabla, $datos)
     {
         // Verificar duplicados
-        $duplicado = DB::table($tabla)
-            ->where(function ($q) use ($datos) {
+        $duplicado = self::where(function ($q) use ($datos) {
                 $q->where('documento', $datos['documento'])
                   ->orWhere('correo', $datos['correo']);
             })
@@ -82,9 +83,7 @@ class ModeloUsuarios extends Model
             $updateData['contrasena'] = $datos['contrasena'];
         }
 
-        $update = DB::table($tabla)
-            ->where('id', $datos['id'])
-            ->update($updateData);
+        $update = self::where('id', $datos['id'])->update($updateData);
 
         return $update ? "ok" : "error";
     }
@@ -94,7 +93,7 @@ class ModeloUsuarios extends Model
     =============================================*/
     public static function mdlEliminarUsuario($tabla, $id)
     {
-        $delete = DB::table($tabla)->where('id', $id)->delete();
+        $delete = self::where('id', $id)->delete();
         return $delete ? "ok" : "error";
     }
 
@@ -103,8 +102,6 @@ class ModeloUsuarios extends Model
     =============================================*/
     public static function mdlObtenerUsuarioPorCorreo($correo)
     {
-        return DB::table("usuarios")
-            ->where("correo", $correo)
-            ->first();
+        return self::where("correo", $correo)->first();
     }
 }

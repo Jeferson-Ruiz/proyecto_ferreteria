@@ -2,17 +2,22 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
-class ModeloFacturacion
+class ModeloFacturacion extends Model
 {
+    protected $table = 'facturas';
+    public $timestamps = false;
+    protected $fillable = ['numero_factura', 'cliente_nombre', 'cliente_documento', 'total', 'fecha'];
+
     /*=============================================
     CREAR FACTURA
     =============================================*/
     public static function mdlCrearFactura($tabla, $datos)
     {
         try {
-            $lastId = DB::table($tabla)->insertGetId([
+            $lastId = self::insertGetId([
                 "numero_factura"     => $datos["numero_factura"],
                 "cliente_nombre"     => $datos["cliente_nombre"],
                 "cliente_documento"  => $datos["cliente_documento"],
@@ -34,13 +39,13 @@ class ModeloFacturacion
     public static function mdlCrearDetalle($tabla, $datos)
     {
         try {
+            // Para detalle_factura necesitamos DB ya que es otra tabla
             DB::table($tabla)->insert([
                 "factura_id"      => $datos["factura_id"],
                 "producto_id"     => $datos["producto_id"],
                 "cantidad"        => $datos["cantidad"],
                 "precio_unitario" => $datos["precio_unitario"],
-                "subtotal" => $datos["subtotal"] // ✅ AGREGAR ESTA LÍNEA
-
+                "subtotal"        => $datos["subtotal"]
             ]);
 
         } catch (\Exception $e) {
@@ -54,7 +59,7 @@ class ModeloFacturacion
     public static function mdlMostrarFacturasConCliente($tabla = "facturas")
     {
         try {
-            return DB::table($tabla . " as f")
+            return self::from($tabla . " as f")
                 ->leftJoin("detalle_factura as d", "f.id", "=", "d.factura_id")
                 ->select(
                     "f.id",
@@ -79,9 +84,7 @@ class ModeloFacturacion
     public static function mdlMostrarFacturas($tabla = "facturas")
     {
         try {
-            return DB::table($tabla)
-                ->orderByDesc("id")
-                ->get();
+            return self::orderByDesc("id")->get();
 
         } catch (\Exception $e) {
             \Log::error("❌ Error al obtener facturas: " . $e->getMessage());
@@ -95,11 +98,11 @@ class ModeloFacturacion
     public static function mdlEliminarFactura($tablaFactura, $tablaDetalle, $idFactura)
     {
         try {
-            // Eliminar detalles
+            // Eliminar detalles (necesita DB para tabla diferente)
             DB::table($tablaDetalle)->where("factura_id", $idFactura)->delete();
 
             // Eliminar factura
-            $deleted = DB::table($tablaFactura)->where("id", $idFactura)->delete();
+            $deleted = self::where("id", $idFactura)->delete();
 
             return $deleted ? "ok" : "error";
 
