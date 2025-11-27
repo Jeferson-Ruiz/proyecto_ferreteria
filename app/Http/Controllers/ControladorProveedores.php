@@ -13,13 +13,13 @@ class ControladorProveedores extends Controller
     =============================================*/
     public function crear(Request $solicitud)
     {
-        $datos = array(
-            "empresa"   => $solicitud->input("empresa"),
-            "asesor"    => $solicitud->input("asesor"), 
+        $datos =[
+            "empresa"   => strtolower(trim($solicitud->input("empresa"))),
+            "asesor"    => strtolower(trim($solicitud->input("asesor"))), 
             "telefono"  => $solicitud->input("telefono"),
-            "correo"    => $solicitud->input("correo"),
-            "productos" => $solicitud->input("productos")
-        );
+            "correo"    => strtolower(trim($solicitud->input("correo"))),
+            "productos" => strtolower(trim($solicitud->input("productos")))
+        ];
 
         $respuesta = ModeloProveedores::mdlIngresarProveedor($this->tabla, $datos);
 
@@ -46,14 +46,14 @@ class ControladorProveedores extends Controller
     =============================================*/
     public function actualizar(Request $solicitud, $id)
     {
-        $datos = array(
+        $datos = [
             "id"        => $id,
-            "empresa"   => $solicitud->input("empresa"),
-            "asesor"    => $solicitud->input("asesor"),
+            "empresa"   => strtolower(trim($solicitud->input("empresa"))),
+            "asesor"    => strtolower(trim($solicitud->input("asesor"))),
             "telefono"  => $solicitud->input("telefono"),
-            "correo"    => $solicitud->input("correo"),
-            "productos" => $solicitud->input("productos")
-        );
+            "correo"    => strtolower(trim($solicitud->input("correo"))),
+            "productos" => strtolower(trim($solicitud->input("productos")))
+        ];
 
         $respuesta = ModeloProveedores::mdlEditarProveedor($this->tabla, $datos);
 

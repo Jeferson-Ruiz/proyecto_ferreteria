@@ -22,11 +22,11 @@ class ControladorClienteMayorista extends Controller
     public function crear(Request $request)
     {
         $datos = [
-            'empresa' => trim($request->input('nuevaEmpresa')),
-            'contacto' => trim($request->input('nuevoContacto')),
+            'empresa' => strtolower(trim($request->input('nuevaEmpresa'))),
+            'contacto' => strtolower(trim($request->input('nuevoContacto'))),
             'telefono' => trim($request->input('nuevoTelefono')),
-            'correo' => trim($request->input('nuevoCorreo')),
-            'direccion' => trim($request->input('nuevaDireccion')),
+            'correo' => strtolower(trim($request->input('nuevoCorreo'))),
+            'direccion' => strtolower(trim($request->input('nuevaDireccion'))),
             'debe' => $request->input('nuevaDeuda') ?? 0
         ];
 
@@ -51,11 +51,11 @@ class ControladorClienteMayorista extends Controller
     {
         $datos = [
             'id' => $request->input('idCliente'),
-            'empresa' => trim($request->input('editarEmpresa')),
-            'contacto' => trim($request->input('editarContacto')),
+            'empresa' => strtolower(trim($request->input('editarEmpresa'))),
+            'contacto' => strtolower(trim($request->input('editarContacto'))),
             'telefono' => trim($request->input('editarTelefono')),
-            'correo' => trim($request->input('editarCorreo')),
-            'direccion' => trim($request->input('editarDireccion')),
+            'correo' => strtolower(trim($request->input('editarCorreo'))),
+            'direccion' => strtolower(trim($request->input('editarDireccion'))),
             'debe' => $request->input('editarDeuda')
         ];
 

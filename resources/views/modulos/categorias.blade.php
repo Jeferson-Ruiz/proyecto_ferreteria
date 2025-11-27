@@ -67,8 +67,8 @@
                 @foreach($categorias as $key => $categoria)
                   <tr>
                     <td>{{ $key + 1 }}</td>
-                    <td>{{ $categoria->nombre }}</td>
-                    <td>{{ $categoria->descripcion ?? 'Sin descripción' }}</td>
+                    <td>{{ ucwords($categoria->nombre )}}</td>
+                    <td>{{ ucwords($categoria->descripcion ?? 'Sin descripción')}}</td>
                     <td>
                       <div class="btn-group">
                         <button class="btn btn-warning btn-sm" 

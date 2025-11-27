@@ -101,11 +101,11 @@
                         @foreach($proveedores as $key => $proveedor)
                             <tr>
                                 <td>{{ $key + 1 }}</td>
-                                <td>{{ $proveedor->empresa ?? '' }}</td>
-                                <td>{{ $proveedor->asesor ?? '' }}</td>
+                                <td>{{ ucwords($proveedor->empresa ?? '' )}}</td>
+                                <td>{{ ucwords($proveedor->asesor ?? '' )}}</td>
                                 <td>{{ $proveedor->telefono ?? '' }}</td>
                                 <td>{{ $proveedor->correo ?? '' }}</td>
-                                <td>{{ $proveedor->productos ?? '' }}</td>
+                                <td>{{ ucwords($proveedor->productos ?? '' )}}</td>
                                 <td>
                                     <button 
                                         type="button" 

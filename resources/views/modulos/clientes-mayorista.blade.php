@@ -102,10 +102,10 @@
                         @foreach($clientes as $key => $cliente)
                             <tr>
                                 <td>{{ $key + 1 }}</td>
-                                <td>{{ $cliente->empresa ?? '' }}</td>
-                                <td>{{ $cliente->contacto ?? '' }}</td>
+                                <td>{{ ucwords($cliente->empresa ?? '')}}</td>
+                                <td>{{ ucwords($cliente->contacto ?? '')}}</td>
                                 <td>{{ $cliente->telefono ?? '' }}</td>
-                                <td>{{ $cliente->correo ?? '' }}</td>
+                                <td>{{ ucwords ($cliente->correo ?? '') }}</td>
                                 <td>{{ $cliente->direccion ?? '' }}</td>
                                 <td>${{ number_format($cliente->debe, 2) }}</td>
                                 <td>

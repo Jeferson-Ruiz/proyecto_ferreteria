@@ -37,7 +37,7 @@ class ProductoController extends Controller
             }
 
             $datos = [
-                "nombre" => $nombre,
+                "nombre" => strtolower(trim($nombre)),
                 "categoria_id" => $categoria,
                 "stock" => $stock,
                 "precio_unitario" => $precio_unitario
@@ -75,7 +75,7 @@ class ProductoController extends Controller
 
             $datos = [
                 "id" => $id,
-                "nombre" => $nombre,
+                "nombre" => strtolower(trim($nombre)),
                 "categoria_id" => $categoria,
                 "stock" => $stock,
                 "precio_unitario" => $precio_unitario

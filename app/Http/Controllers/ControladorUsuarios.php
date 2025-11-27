@@ -35,9 +35,9 @@ class ControladorUsuarios extends Controller
         $datos = [
             "nombre_completo" => strtolower(trim($request->nuevoNombre)),
             "documento"=> trim($request->nuevoDocumento),
-            "correo"=> strtolower(trim($request->nuevoCorreo)),
+            "correo"=> trim($request->nuevoCorreo),
             "contrasena"=> password_hash($request->nuevaContrasena, PASSWORD_DEFAULT),
-            "rol_id"          => intval($request->nuevoRol)
+            "rol_id" => intval($request->nuevoRol)
         ];
 
         $respuesta = ModeloUsuarios::mdlIngresarUsuario("usuarios", $datos);
@@ -66,7 +66,7 @@ class ControladorUsuarios extends Controller
             "id"=> $id,
             "nombre_completo" => strtolower(trim($request->editarNombre)),
             "documento"       => trim($request->editarDocumento),
-            "correo"          => strtolower(trim($request->editarCorreo)),
+            "correo"          => trim($request->editarCorreo),
             "rol_id"          => intval($request->editarRol)
         ];
 

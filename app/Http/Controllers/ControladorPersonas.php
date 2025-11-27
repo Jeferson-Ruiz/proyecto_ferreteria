@@ -25,7 +25,7 @@ class ControladorPersonas extends Controller
             $datos = [
                 "nombre_completo" => strtolower(trim($request->input('nombre_completo'))),
                 "documento"       => $request->input('documento'),
-                "correo"          => strtolower(trim($request->input('correo'))),
+                "correo"          => trim($request->input('correo')),
                 "contrasena"      => password_hash($request->input('contrasena'), PASSWORD_BCRYPT),
                 "rol_id"          => $request->input('rol_id'),
             ];
@@ -46,7 +46,7 @@ class ControladorPersonas extends Controller
         if ($request->has('idEditar')) {
 
             $datos = [
-                //"id"              => $request->input('idEditar'),
+                "id"              => $request->input('idEditar'),
                 "nombre_completo" => strtolower(trim($request->input('nombreEditar'))),
                 "documento"       => $request->input('documentoEditar'),
                 "correo"          => strtolower(trim($request->input('correoEditar'))),

@@ -21,8 +21,8 @@ class CategoriaController extends Controller
     =============================================*/
     public function crear(Request $request)
     {
-        $nombre = trim($request->input('nuevaCategoria'));
-        $descripcion = trim($request->input('nuevaDescripcion'));
+        $nombre = strtolower(trim($request->input('nuevaCategoria')));
+        $descripcion = strtolower(trim($request->input('nuevaDescripcion')));
 
         if ($nombre) {
             // Validar duplicados
@@ -50,8 +50,8 @@ class CategoriaController extends Controller
     {
         $datos = [
             'id' => $request->input('idCategoria'),
-            'nombre' => trim($request->input('editarCategoria')),
-            'descripcion' => trim($request->input('editarDescripcion'))
+            'nombre' => strtolower(trim($request->input('editarCategoria'))),
+            'descripcion' => strtolower(trim($request->input('editarDescripcion')))
         ];
 
         $respuesta = Categoria::mdlEditarCategoria($datos);

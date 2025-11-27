@@ -68,8 +68,8 @@
                   @foreach($roles as $key => $rol)
                     <tr>
                       <td>{{ $key + 1 }}</td>
-                      <td>{{ $rol->nombre }}</td>
-                      <td>{{ $rol->descripcion ?? 'Sin descripción' }}</td>
+                      <td>{{ ucwords($rol->nombre )}}</td>
+                      <td>{{ ucwords($rol->descripcion ?? 'Sin descripción' )}}</td>
                       <td>
                         <div class="btn-group">
                           <button class="btn btn-warning btnEditarRol"

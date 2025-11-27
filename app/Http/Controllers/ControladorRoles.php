@@ -23,8 +23,10 @@ class ControladorRoles extends Controller
     {
         if (!empty($request->nuevoRol)) {
 
-            $datos = ["nombre" => trim($request->nuevoRol),
-                    "descripcion" => trim($request->nuevaDescripcion)];
+            $datos = [
+                "nombre" => strtolower(trim($request->nuevoRol)),
+                "descripcion" => strtolower(trim($request->nuevaDescripcion))
+            ];
 
 
             // Validar que el rol no exista
@@ -69,9 +71,8 @@ class ControladorRoles extends Controller
 
             $datos = [
                 "id"     => $id,
-                "nombre" => trim($request->editarRol),
-                "descripcion" => trim($request->editarDescripcion)
-
+                "nombre" => strtolower(trim($request->editarRol)),
+                "descripcion" => strtolower(trim($request->editarDescripcion))
             ];
 
             $respuesta = ModeloRoles::mdlEditarRol("roles", $datos);

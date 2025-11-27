@@ -32,7 +32,7 @@
                 <tr>
                   <td>{{ $i + 1 }}</td>
                   <td>{{ $f->numero_factura }}</td>
-                  <td>{{ $f->cliente }}</td>
+                  <td>{{ ucwords($f->cliente )}}</td>
                   <td>{{ $f->fecha }}</td>
                   <td>${{ number_format($f->total, 2) }}</td>
                   <td>

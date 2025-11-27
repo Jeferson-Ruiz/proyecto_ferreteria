@@ -21,7 +21,7 @@ class ControladorFacturacion extends Controller
         $request->has("cliente_nombre") && $request->has("cliente_documento")) {
 
         $productos = json_decode($request->productos, true);
-        $cliente_nombre = trim($request->cliente_nombre);
+        $cliente_nombre = strtolower(trim($request->cliente_nombre));
         $cliente_documento = trim($request->cliente_documento);
         $numero_factura = "FAC-" . rand(1000, 9999);
 

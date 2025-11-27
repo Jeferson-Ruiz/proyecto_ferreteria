@@ -69,8 +69,8 @@
                 @foreach($productos as $key => $producto)
                   <tr>
                     <td>{{ $key + 1 }}</td>
-                    <td>{{ $producto->nombre }}</td>
-                    <td>{{ $producto->categoria->nombre ?? 'Sin categoría' }}</td>
+                    <td>{{ ucwords($producto->nombre) }}</td>
+                    <td>{{ ucwords($producto->categoria->nombre ?? 'Sin categoría' )}}</td>
                     <td>{{ $producto->stock }}</td>
                     <td>${{ number_format($producto->precio_unitario, 2) }}</td>
                     <td>

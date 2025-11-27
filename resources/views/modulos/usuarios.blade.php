@@ -108,7 +108,7 @@
                                 <td>{{ $key + 1 }}</td>
                                 <td>{{ ucwords($usuario->nombre_completo ?? '' )}}</td>
                                 <td>{{ $usuario->documento ?? '' }}</td>
-                                <td>{{ ucwords ($usuario->correo ?? '') }}</td>
+                                <td>{{ $usuario->correo ?? '' }}</td>
                                 <td>{{ $usuario->rol ?? 'Sin rol' }}</td>
                                 <td>
                                     <button 
