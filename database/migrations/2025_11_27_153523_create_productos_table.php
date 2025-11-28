@@ -6,19 +6,18 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-public function up(): void
+public function up()
     {
         Schema::create('productos', function (Blueprint $table) {
             $table->id();
             $table->string('nombre');
-            $table->unsignedBigInteger('categoria_id');
-            $table->integer('stock');
+            $table->foreignId('categoria_id')->constrained('categorias')->onDelete('cascade');
+            $table->integer('stock')->default(0);
             $table->decimal('precio_unitario', 10, 2);
-            $table->foreign('categoria_id')->references('id')->on('categorias')->onDelete('cascade');
         });
     }
 
-    public function down(): void
+    public function down()
     {
         Schema::dropIfExists('productos');
     }

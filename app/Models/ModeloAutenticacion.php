@@ -8,7 +8,6 @@ class ModeloAutenticacion
 {
     /*
      * Obtener usuario por correo
-     * Equivalente a mdlIniciarSesion del PHP nativo
      */
     public static function mdlIniciarSesion($correo)
     {
