@@ -10,9 +10,8 @@ use App\Http\Controllers\ControladorFacturacion;
 use App\Http\Controllers\ControladorClienteMayorista;
 use App\Http\Controllers\ControladorAuth;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::redirect('/', '/login');
+
 
 // RUTAS PÚBLICAS
 Route::get('/login', function () {
@@ -23,7 +22,6 @@ Route::post('/login', [ControladorAuth::class, 'ctrIngresarUsuario'])->name('log
 
 // RUTAS PROTEGIDAS
 Route::get('/logout', [ControladorAuth::class, 'logout'])->name('logout');
-
 Route::get('/inicio', function () { return view('modulos.inicio'); })->name('inicio');
 
 // RUTAS categoria:
@@ -57,12 +55,10 @@ Route::delete('/roles/{id}', [ControladorRoles::class, 'ctrBorrarRol'])->name('r
 
 
 //Ruta proveedores
-// Ruta para la vista
 Route::get('/proveedores', function () {
     $proveedores = App\Models\ModeloProveedores::mdlMostrarProveedores('proveedores', null, null);
     return view('modulos.proveedores', compact('proveedores'));
 })->name('proveedores.index');
-
 Route::post('/proveedores/crear', [ControladorProveedores::class, 'crear'])->name('proveedores.store');
 Route::put('/proveedores/actualizar/{id}', [ControladorProveedores::class, 'actualizar'])->name('proveedores.update');
 Route::delete('/proveedores/eliminar/{id}', [ControladorProveedores::class, 'eliminar'])->name('proveedores.destroy');
