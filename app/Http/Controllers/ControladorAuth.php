@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Auth;
+
 
 class ControladorAuth extends Controller
 {
@@ -19,12 +21,14 @@ class ControladorAuth extends Controller
             $contrasena = trim($request->input('contrasena'));
 
             $usuario = DB::table('usuarios')
-                ->where('correo', $correo) // ✅ CORREGIDO: 'email' → 'correo'
+                ->where('correo', $correo) 
                 ->first();
 
             if ($usuario) {
 
                 if (password_verify($contrasena, $usuario->contrasena)) {
+
+                    Auth::loginUsingId($usuario->id);
 
                     // Guardar datos en sesión
                     Session::put('iniciarSesion', 'ok');
@@ -55,6 +59,8 @@ class ControladorAuth extends Controller
     ============================================ */
     public function logout()
     {
+        Auth::logout();
+
         Session::flush();
         return redirect()->to('/login');
     }
