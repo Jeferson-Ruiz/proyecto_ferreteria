@@ -70,4 +70,16 @@ class Categoria extends Model
             ->orderBy('id', 'DESC')
             ->get();
     }
+
+    /*=============================================
+    CONTAR CATEGORIAS
+    ======================================*/
+    public static function mdlContarCategorias()
+    {
+        return self::count();
+    }
+
+
+
+
 }

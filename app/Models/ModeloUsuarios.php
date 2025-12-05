@@ -104,4 +104,14 @@ class ModeloUsuarios extends Authenticatable{
     {
         return self::where("correo", $correo)->first();
     }
+
+    /*=============================================
+    CONTAR USUARIOS
+    ======================================*/
+    public static function mdlContarUsuarios()
+    {
+        return self::count();
+    }
+
+
 }

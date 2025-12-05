@@ -9,6 +9,7 @@ use App\Http\Controllers\ControladorRoles;
 use App\Http\Controllers\ControladorProveedores;
 use App\Http\Controllers\ControladorClienteMayorista;
 use App\Http\Controllers\ControladorFacturacion;
+use App\Http\Controllers\ControladorInicio;
 
 // RUTAS PÚBLICAS (sin autenticación)
 Route::redirect('/', '/login');
@@ -84,4 +85,9 @@ Route::middleware(['auth'])->group(function () {
         $facturas = \App\Models\ModeloFacturacion::mdlMostrarFacturasConCliente();
         return view('modulos.listado-facturas', compact('facturas'));
     })->name('listado.facturas');
+
+    //Rutas Inicio
+    Route::get('/inicio', [ControladorInicio::class, 'mostrar'])->name('inicio');
+
+
 });

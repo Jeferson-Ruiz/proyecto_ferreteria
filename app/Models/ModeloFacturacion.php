@@ -111,4 +111,12 @@ class ModeloFacturacion extends Model
             return "error";
         }
     }
+
+    /*=============================================
+    TOTAL DE FACTURAS
+    ======================================*/
+    public static function mdlTotalFacturas()
+    {
+        return self::sum('total');
+    }
 }

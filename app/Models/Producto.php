@@ -85,4 +85,15 @@ class Producto extends Model
             ->orderBy('id', 'DESC')
             ->get();
     }
+
+    /*=============================================
+    CONTAR PRODUCTOS
+    ======================================*/
+    public static function mdlContarProductos()
+    {
+        return self::count();
+    }
+
+
+
 }
