@@ -39,7 +39,7 @@
         <div class="col-lg-3 col-6">
           <a href="{{ route('usuarios.index') }}" class="small-box bg-info enlace-dashboard">
             <div class="inner">
-              <h3>12</h3>
+            <h3>{{ $totalUsuarios }}</h3>
               <p>Usuarios Registrados</p>
             </div>
             <div class="icon">
@@ -52,7 +52,7 @@
         <div class="col-lg-3 col-6">
           <a href="{{ route('productos.index') }}" class="small-box bg-success enlace-dashboard">
             <div class="inner">
-              <h3>350</h3>
+            <h3>{{ $totalProductos }}</h3>
               <p>Productos en Inventario</p>
             </div>
             <div class="icon">
@@ -65,7 +65,7 @@
         <div class="col-lg-3 col-6">
           <a href="{{ route('categorias.index') }}" class="small-box bg-warning enlace-dashboard">
             <div class="inner">
-              <h3>15</h3>
+            <h3>{{ $totalCategorias }}</h3>
               <p>Categorías</p>
             </div>
             <div class="icon">
@@ -78,8 +78,8 @@
         <div class="col-lg-3 col-6">
           <a href="{{ route('listado.facturas') }}" class="small-box bg-danger enlace-dashboard">
             <div class="inner">
-              <h3>$45M</h3>
-              <p>Nueva Factura</p>
+            <h3>${{ number_format($totalFacturas, 2) }}</h3>
+              <p>Ventas</p>
             </div>
             <div class="icon">
               <i class="fas fa-file-invoice-dollar"></i>
