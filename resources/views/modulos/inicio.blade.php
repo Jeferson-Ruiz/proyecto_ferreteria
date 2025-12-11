@@ -86,6 +86,18 @@
             </div>
           </a>
         </div>
+        <!-- Productos bajos en inventario -->
+        <div class="col-lg-3 col-6">
+            <a href="{{ route('productos.bajo-inventario') }}" class="small-box bg-warning enlace-dashboard">
+                <div class="inner">
+                    <h3>{{ $productosBajoInventario }}</h3>
+                    <p>Productos bajos stock</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+            </a>
+        </div>
       </div>
     </div>
   </section>

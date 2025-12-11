@@ -94,6 +94,23 @@ class Producto extends Model
         return self::count();
     }
 
-
+    /*=============================================
+    PRODUCTOS BAJOS EN INVENTARIO (stock < 10)
+    ======================================*/
+    public static function mdlProductosBajoInventario()
+    {
+        return self::where('stock', '<', 10)->count();
+    }
+    
+    /*=============================================
+    OBTENER PRODUCTOS BAJOS EN INVENTARIO
+    ======================================*/
+    public static function mdlObtenerProductosBajoInventario()
+    {
+        return self::with('categoria')
+            ->where('stock', '<', 10)
+            ->orderBy('stock', 'ASC')
+            ->get();
+    }
 
 }

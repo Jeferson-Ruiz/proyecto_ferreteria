@@ -17,7 +17,7 @@ class ControladorInicio extends Controller
             'totalCategorias' => Categoria::count(),
             'totalProductos' => Producto::count(),
             'totalFacturas' => ModeloFacturacion::mdlTotalFacturas(),
-
+            'productosBajoInventario' => Producto::mdlProductosBajoInventario(),
         ];
 
         return view('modulos.inicio', $datos);

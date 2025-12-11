@@ -124,5 +124,15 @@ class ProductoController extends Controller
         
         $categorias = Categoria::mdlMostrarCategorias(); // Para el select de categorías
         return view('modulos.productos', compact('productos', 'categorias'));
-}
+    }
+
+    /*=============================================
+    PRODUCTOS BAJOS EN INVENTARIO
+    ======================================*/
+    public function bajoInventario()
+    {
+        $productos = Producto::mdlObtenerProductosBajoInventario();
+        return view('modulos.productos-bajo-inventario', compact('productos'));
+    }
+
 }

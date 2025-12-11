@@ -88,6 +88,5 @@ Route::middleware(['auth'])->group(function () {
 
     //Rutas Inicio
     Route::get('/inicio', [ControladorInicio::class, 'mostrar'])->name('inicio');
-
-
+    Route::get('/productos/bajo-inventario', [ProductoController::class, 'bajoInventario'])->name('productos.bajo-inventario');
 });
