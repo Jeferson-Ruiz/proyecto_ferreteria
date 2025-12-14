@@ -1,108 +1,99 @@
 @extends('layouts.plantilla')
 
 @section('content')
-<div class="content-wrapper">
-  <section class="content-header">
-    <div class="container-fluid">
-      <h1>Gestión de Roles</h1>
-    </div>
-  </section>
+<!-- 🧡 Mostrar mensajes -->
+@if(session('success'))
+  <div class="alert alert-success alert-dismissible fade show" role="alert">
+    <strong>¡Éxito!</strong> {{ session('success') }}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+@endif
 
-  <section class="content">
-    <div class="container-fluid">
-      <!-- Mostrar mensajes -->
-      @if(session('success'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-          <strong>¡Éxito!</strong> {{ session('success') }}
-          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-      @endif
+@if(session('error'))
+  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <strong>¡Error!</strong> {{ session('error') }}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+@endif
 
-      @if(session('error'))
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-          <strong>¡Error!</strong> {{ session('error') }}
-          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-      @endif
-
-      <div class="card mb-4">
-        <div class="card-header">
-          <div class="d-flex justify-content-between align-items-center">
-            <!-- BARRA DE BÚSQUEDA A LA IZQUIERDA -->
-            <form method="GET" action="{{ route('roles.buscar') }}">
-              <div class="input-group">
-                <input type="text" name="termino" class="form-control" placeholder="Buscar rol..." 
-                       value="{{ request('termino') }}">
-                <div class="input-group-append">
-                  <button class="btn btn-outline-secondary" type="submit">
-                    <i class="fas fa-search"></i>
-                  </button>
-                </div>
-              </div>
-            </form>
-            
-            <!-- BOTÓN AGREGAR A LA DERECHA -->
-            <button class="btn btn-primary" data-toggle="modal" data-target="#modalAgregarRol">
-              <i class="fas fa-plus"></i> Agregar Rol
+<!-- 🧡 Card principal -->
+<div class="card mb-4">
+  <div class="card-header">
+    <h3 class="text-center">Gestión de Roles</h3>
+    
+    <div class="d-flex justify-content-between align-items-center">
+      <!-- BARRA DE BÚSQUEDA -->
+      <form method="GET" action="{{ route('roles.buscar') }}" class="flex-grow-1 mr-3">
+        <div class="input-group">
+          <input type="text" name="termino" class="form-control" placeholder="Buscar rol..." 
+                 value="{{ request('termino') }}">
+          <div class="input-group-append">
+            <button class="btn btn-outline-secondary" type="submit">
+              <i class="fas fa-search"></i>
             </button>
           </div>
         </div>
-
-        <div class="card-body">
-          <div class="table-responsive">
-            <table id="tablaRoles" class="table table-bordered table-striped text-center">
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Nombre del Rol</th>
-                  <th>Descripción</th>
-                  <th>Acciones</th>
-                </tr>
-              </thead>
-              <tbody>
-                @if($roles && count($roles) > 0)
-                  @foreach($roles as $key => $rol)
-                    <tr>
-                      <td>{{ $key + 1 }}</td>
-                      <td>{{ ucwords($rol->nombre )}}</td>
-                      <td>{{ ucwords($rol->descripcion ?? 'Sin descripción' )}}</td>
-                      <td>
-                        <div class="btn-group">
-                          <button class="btn btn-warning btnEditarRol"
-                                  data-toggle="modal"
-                                  data-target="#modalEditarRol"
-                                  data-id="{{ $rol->id }}"
-                                  data-nombre="{{ $rol->nombre }}"
-                                  data-descripcion="{{ $rol->descripcion ?? '' }}">
-                            <i class="fas fa-edit"></i> Editar
-                          </button>
-                          <form method="POST" action="{{ route('roles.destroy', $rol->id) }}" style="display: inline;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger" onclick="return confirm('¿Seguro que deseas eliminar este rol?');">
-                              <i class="fas fa-trash"></i> Eliminar
-                            </button>
-                          </form>
-                        </div>
-                      </td>
-                    </tr>
-                  @endforeach
-                @else
-                  <tr>
-                    <td colspan="4" class="text-center">No hay roles registrados</td>
-                  </tr>
-                @endif
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
+      </form>
+      
+      <!-- BOTÓN AGREGAR -->
+      <button class="btn btn-primary" data-toggle="modal" data-target="#modalAgregarRol">
+        <i class="fas fa-plus"></i> Agregar Rol
+      </button>
     </div>
-  </section>
+  </div>
+
+  <div class="card-body">
+    <div class="table-responsive">
+      <table id="tablaRoles" class="table table-bordered table-striped text-center">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Nombre del Rol</th>
+            <th>Descripción</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @if($roles && count($roles) > 0)
+            @foreach($roles as $key => $rol)
+              <tr>
+                <td>{{ $key + 1 }}</td>
+                <td>{{ ucwords($rol->nombre )}}</td>
+                <td>{{ ucwords($rol->descripcion ?? 'Sin descripción' )}}</td>
+                <td>
+                  <div class="btn-group">
+                    <button class="btn btn-warning btnEditarRol"
+                            data-toggle="modal"
+                            data-target="#modalEditarRol"
+                            data-id="{{ $rol->id }}"
+                            data-nombre="{{ $rol->nombre }}"
+                            data-descripcion="{{ $rol->descripcion ?? '' }}">
+                      <i class="fas fa-edit"></i> Editar
+                    </button>
+                    <form method="POST" action="{{ route('roles.destroy', $rol->id) }}" style="display: inline;">
+                      @csrf
+                      @method('DELETE')
+                      <button type="submit" class="btn btn-danger" onclick="return confirm('¿Seguro que deseas eliminar este rol?');">
+                        <i class="fas fa-trash"></i> Eliminar
+                      </button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            @endforeach
+          @else
+            <tr>
+              <td colspan="4" class="text-center">No hay roles registrados</td>
+            </tr>
+          @endif
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
 
 <!-- MODAL AGREGAR ROL -->

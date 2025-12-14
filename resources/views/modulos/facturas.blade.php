@@ -1,91 +1,82 @@
 @extends('layouts.plantilla')
 
 @section('content')
-<div class="content-wrapper">
-  <section class="content-header">
-    <div class="container-fluid">
-      <h1><i class="fas fa-file-invoice-dollar"></i> Nueva Factura</h1>
+<!-- 🧡 Mostrar mensajes -->
+@if(session('success'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {{ session('success') }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
     </div>
-  </section>
+@endif
 
-  <section class="content">
+@if(session('error'))
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        {{ session('error') }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+@endif
 
-     @if(session('success'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            {{ session('success') }}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    @endif
+<!-- 🧡 Card principal -->
+<div class="card">
+    <div class="card-header bg-primary text-white">
+        <h3 class="card-title text-center"><i class="fas fa-file-invoice-dollar"></i> Nueva Factura</h3>
+    </div>
 
-    @if(session('error'))
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            {{ session('error') }}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    @endif
-
-    <div class="card">
-      <div class="card-header bg-primary text-white">
-        <h3 class="card-title">🧾 Crear Factura POS</h3>
-      </div>
-
-      <div class="card-body">
+    <div class="card-body">
         <form method="POST" action="{{ route('facturas.crear') }}" id="formFactura">
-          @csrf
-          <div class="row">
-            <div class="col-md-6">
-              <div class="form-group">
-                <label>Nombre del cliente:</label>
-                <input type="text" name="cliente_nombre" class="form-control" placeholder="Ej: Juan Pérez" required>
-              </div>
+            @csrf
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Nombre del cliente:</label>
+                        <input type="text" name="cliente_nombre" class="form-control" placeholder="Ej: Juan Pérez" required>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Documento del cliente:</label>
+                        <input type="text" name="cliente_documento" class="form-control" placeholder="Ej: 12345678" required>
+                    </div>
+                </div>
             </div>
 
-            <div class="col-md-6">
-              <div class="form-group">
-                <label>Documento del cliente:</label>
-                <input type="text" name="cliente_documento" class="form-control" placeholder="Ej: 12345678" required>
-              </div>
+            <div class="form-group">
+                <label>Buscar producto:</label>
+                <input type="text" id="buscarProducto" class="form-control" placeholder="Escriba el nombre del producto...">
+                <div id="listaProductos" class="list-group mt-2"></div>
             </div>
-          </div>
 
-          <div class="form-group">
-            <label>Buscar producto:</label>
-            <input type="text" id="buscarProducto" class="form-control" placeholder="Escriba el nombre del producto...">
-            <div id="listaProductos" class="list-group mt-2"></div>
-          </div>
+            <table class="table table-bordered mt-4" id="tablaDetalle">
+                <thead class="bg-secondary text-white">
+                <tr>
+                    <th>Producto</th>
+                    <th width="100">Cantidad</th>
+                    <th width="120">Precio</th>
+                    <th width="120">Subtotal</th>
+                    <th width="50">❌</th>
+                </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
 
-          <table class="table table-bordered mt-4" id="tablaDetalle">
-            <thead class="bg-secondary text-white">
-              <tr>
-                <th>Producto</th>
-                <th width="100">Cantidad</th>
-                <th width="120">Precio</th>
-                <th width="120">Subtotal</th>
-                <th width="50">❌</th>
-              </tr>
-            </thead>
-            <tbody></tbody>
-          </table>
+            <div class="text-right mt-3">
+                <h4>Total: $<span id="totalFactura">0.00</span></h4>
+            </div>
 
-          <div class="text-right mt-3">
-            <h4>Total: $<span id="totalFactura">0.00</span></h4>
-          </div>
+            <input type="hidden" name="productos" id="productosJSON">
 
-          <input type="hidden" name="productos" id="productosJSON">
-
-          <div class="text-right">
-            <button type="submit" class="btn btn-success btn-lg" id="btnGuardar">
-              <i class="fas fa-save"></i> Guardar Factura
-            </button>
-          </div>
+            <div class="text-right">
+                <button type="submit" class="btn btn-success btn-lg" id="btnGuardar">
+                    <i class="fas fa-save"></i> Guardar Factura
+                </button>
+            </div>
         </form>
-      </div>
     </div>
-  </section>
 </div>
 
 <style>

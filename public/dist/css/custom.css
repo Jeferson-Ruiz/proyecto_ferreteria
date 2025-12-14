@@ -1,69 +1,139 @@
 /* ================================================
-   ✅ CORRECCIÓN FINAL - AJUSTE DEL LAYOUT GENERAL
+   ✅ SOLUCIÓN GLOBAL - CENTRAR TODO EL SISTEMA
    ================================================ */
 
-/* Evita que el contenido se corte */
-.content-wrapper {
-  overflow-x: auto !important;
-  transition: margin-left 0.3s ease-in-out;
+   .content-wrapper {
+    padding: 40px;
+    margin-top: 10px;
+}
+/* 1. CONTENEDOR PRINCIPAL - Centrar TODO con márgenes */
+.content-wrapper.global-centered {
+  display: flex !important;
+  justify-content: center !important;
+  padding-left: 15px !important;  /* ← MARGEN IZQUIERDO */
+  padding-right: 15px !important; /* ← MARGEN DERECHO */
+  margin-left: auto !important;
+  margin-right: auto !important;
+  width: 100% !important;
 }
 
-/* Ajuste cuando el menú lateral está expandido */
-body.sidebar-mini .content-wrapper {
-  margin-left: 250px !important; /* ancho normal del menú */
+/* 2. CONTENEDOR INTERNO - Ancho limitado con padding */
+.content-wrapper-inner {
+  width: 100% !important; /* Cambié de 95% a 100% */
+  max-width: 1400px !important;
+  margin: 0 auto !important;
+  padding: 20px 25px !important; /* ← Aumenté padding horizontal */
+  display: block !important;
+  float: none !important;
+  box-sizing: border-box !important;
 }
 
-/* Ajuste cuando el menú lateral está colapsado */
-body.sidebar-mini.sidebar-collapse .content-wrapper {
-  margin-left: 80px !important; /* ancho reducido */
+/* 3. SOBREESCRIBIR AdminLTE COMPLETAMENTE */
+body .content-wrapper .content,
+body .content-wrapper .container-fluid,
+body .content-wrapper section.content {
+  width: 100% !important;
+  max-width: 1400px !important;
+  margin: 0 auto !important;
+  padding: 0 10px !important; /* ← Margen interno */
+  float: none !important;
+  box-sizing: border-box !important;
 }
 
-/* Para pantallas pequeñas (móviles/tablets) */
-@media (max-width: 991px) {
-  body.sidebar-mini .content-wrapper {
-    margin-left: 0 !important; /* ocupa todo el ancho */
-    padding: 10px;
-  }
+/* 4. CARDS - Todas centradas con margen */
+body .content-wrapper .card {
+  margin: 15px auto !important; /* ← Márgenes verticales */
+  margin-left: auto !important;
+  margin-right: auto !important;
+  display: block !important;
+  float: none !important;
+  position: relative !important;
+  width: calc(100% - 10px) !important; /* ← Pequeño margen interno */
 }
 
-/* Asegura que las tablas grandes no se corten */
-.card-body {
-  overflow-x: auto !important;
+/* 5. TABLAS - Todas centradas */
+body .content-wrapper .table-responsive,
+body .content-wrapper table.table {
+  margin-left: auto !important;
+  margin-right: auto !important;
+  display: table !important;
+  width: 100% !important;
 }
 
-/* Mejora la transición visual */
-.main-sidebar {
-  transition: all 0.3s ease-in-out;
-}
-
-/* ==== Ajuste preciso del contenido para evitar recorte con el sidebar ==== */
-
-/* Espacio interno dentro del área de contenido principal */
-.content-wrapper {
-  padding-left: 40px !important;  /* aumenta espacio a la izquierda */
-  padding-right: 25px !important; /* evita recorte a la derecha */
-  transition: all 0.3s ease;
-}
-
-/* Cuando el sidebar está colapsado */
-body.sidebar-collapse .content-wrapper {
-  padding-left: 20px !important;
+/* 6. Espacio extra para elementos dentro de cards */
+.card-body,
+.card-header,
+.card-footer {
+  padding-left: 15px !important;
   padding-right: 15px !important;
 }
 
-/* Evitar que el contenido o las tablas se salgan del ancho */
-.content-wrapper .card,
-.content-wrapper .table-responsive {
-  margin-left: 0 !important;
-  margin-right: 0 !important;
-  width: 100% !important;
-  overflow-x: auto;
+/* 7. Para formularios dentro de cards */
+.card-body form,
+.card-body .form-group {
+  padding-left: 5px !important;
+  padding-right: 5px !important;
 }
 
-/* En pantallas pequeñas, mantener márgenes suaves */
+/* 8. Tablas dentro de cards */
+.card-body .table-responsive {
+  margin-left: 5px !important;
+  margin-right: 5px !important;
+  padding: 0 5px !important;
+}
+
+/* ================================================
+   ✅ AJUSTE PARA SIDEBAR
+   ================================================ */
+
+/* Con sidebar expandido */
+body.sidebar-mini .content-wrapper.global-centered {
+  margin-left: 250px !important;
+  padding-left: 25px !important; /* ← Más margen con sidebar */
+  padding-right: 25px !important;
+}
+
+/* Con sidebar colapsado */
+body.sidebar-mini.sidebar-collapse .content-wrapper.global-centered {
+  margin-left: 300px !important;
+  padding-left: 20px !important;
+  padding-right: 20px !important;
+}
+
+/* En móviles */
 @media (max-width: 991px) {
-  .content-wrapper {
+  body.sidebar-mini .content-wrapper.global-centered {
+    margin-left: 0 !important;
     padding-left: 15px !important;
     padding-right: 15px !important;
   }
+  
+  .content-wrapper-inner {
+    width: 100% !important;
+    padding: 15px !important;
+  }
+  
+  body .content-wrapper .card {
+    width: 100% !important;
+    margin: 10px auto !important;
+  }
+}
+
+/* Para pantallas grandes (más de 1200px) */
+@media (min-width: 1200px) {
+  .content-wrapper-inner {
+    padding: 20px 30px !important; /* ← Más espacio en pantallas grandes */
+  }
+  
+  body.sidebar-mini .content-wrapper.global-centered {
+    padding-left: 30px !important;
+    padding-right: 30px !important;
+  }
+}
+
+/* Para evitar que el contenido toque los bordes */
+.card,
+.table-responsive,
+.table {
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.01) !important; /* Borde sutil visual */
 }
