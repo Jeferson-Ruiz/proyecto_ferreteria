@@ -16,9 +16,13 @@
           </a>
         </li>
 
+        <!-- =========================================== -->
+        <!-- SECCIÓN SOLO PARA ADMINISTRADORES (rol 1) -->
+        <!-- =========================================== -->
+        @if(Session::get('rol') == 1)
         <!-- USUARIOS -->
         <li class="nav-item">
-        <a href="{{ url('/usuarios') }}" class="nav-link">
+          <a href="{{ url('/usuarios') }}" class="nav-link">
             <i class="nav-icon fas fa-users"></i>
             <p>Usuarios</p>
           </a>
@@ -31,6 +35,10 @@
             <p>Roles</p>
           </a>
         </li>
+        @endif
+        <!-- =========================================== -->
+        <!-- FIN SECCIÓN ADMINISTRADORES -->
+        <!-- =========================================== -->
 
         <!-- CATEGORÍAS -->
         <li class="nav-item">
@@ -56,14 +64,13 @@
           </a>
         </li>
 
-          <!-- Clientes -->
+        <!-- Clientes -->
         <li class="nav-item">
           <a href="{{ url('/clientes-mayorista') }}" class="nav-link">
             <i class="nav-icon fas fa-user-tie"></i>
             <p>Clientes</p>
           </a>
         </li>
-
 
         <!-- FACTURACIÓN -->
         <li class="nav-item has-treeview">
