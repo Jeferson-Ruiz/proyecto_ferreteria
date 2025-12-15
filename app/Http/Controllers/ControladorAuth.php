@@ -39,7 +39,7 @@ class ControladorAuth extends Controller
 
                     // Redirección según rol 
                     if ($usuario->rol_id=== 1 ) { //rol 1 administrador
-                        return redirect()->to('/usuarios');
+                        return redirect()->to('/inicio');
                     } else {
                         return redirect()->to('/inicio');
                     }
