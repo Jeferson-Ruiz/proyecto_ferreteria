@@ -6,7 +6,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Str;
+use App\Mail\RecuperacionContrasenaMail;
+use Illuminate\Support\Facades\Mail;
 
 class ControladorAuth extends Controller
 {
@@ -63,5 +65,98 @@ class ControladorAuth extends Controller
 
         Session::flush();
         return redirect()->to('/login');
+    }
+
+    /* ============================================
+    RECUPERACIÓN DE CONTRASEÑA
+    ============================================ */
+
+    // Mostrar formulario "Olvidé mi contraseña"
+    public function mostrarOlvideContrasena()
+    {
+        return view('modulos.olvide-contrasena');
+    }
+
+    // Enviar enlace de recuperación
+    public function enviarLinkRecuperacion(Request $request)
+    {
+        $request->validate(['correo' => 'required|email']);
+        
+        $usuario = DB::table('usuarios')->where('correo', $request->correo)->first();
+        
+        if (!$usuario) {
+            return back()->with('error', 'Correo no encontrado en el sistema');
+        }
+        
+        // Generar token único
+        $token = Str::random(60);
+        
+        // Guardar token en la tabla (expira en 24 horas)
+        DB::table('password_resets')->updateOrInsert(
+            ['email' => $request->correo],
+            ['token' => $token, 'created_at' => now()]
+        );
+        
+        // Enviar email
+        try {
+            Mail::to($request->correo)->send(new RecuperacionContrasenaMail($token, $request->correo));
+            
+            return redirect()->route('password.sent')->with('email', $request->correo);
+            
+        } catch (\Exception $e) {
+            // Si falla el email (en desarrollo), muestra el enlace
+            \Log::error('Error enviando email: ' . $e->getMessage());
+            
+            return back()->with('info', 
+                'En desarrollo: <a href="' . url('/restablecer-contrasena/' . $token) . '">Haz clic aquí</a> para restablecer contraseña.'
+            )->with('correo', $request->correo);
+        }
+    }
+
+    // Mostrar formulario para nueva contraseña
+    public function mostrarFormRestablecer($token)
+    {
+        $reset = DB::table('password_resets')->where('token', $token)->first();
+        
+        if (!$reset) {
+            return redirect()->route('password.request')
+                ->with('error', 'Token inválido o expirado');
+        }
+        
+        return view('modulos.nueva-contrasena', [
+            'token' => $token,
+            'correo' => $reset->email
+        ]);
+    }
+
+    // Actualizar contraseña
+    public function restablecerPassword(Request $request)
+    {
+        $request->validate([
+            'token' => 'required',
+            'correo' => 'required|email',
+            'password' => 'required|min:6|confirmed'
+        ]);
+        
+        // Verificar token
+        $reset = DB::table('password_resets')
+            ->where('email', $request->correo)
+            ->where('token', $request->token)
+            ->first();
+        
+        if (!$reset) {
+            return back()->with('error', 'Token inválido o expirado');
+        }
+        
+        // Actualizar contraseña
+        DB::table('usuarios')
+            ->where('correo', $request->correo)
+            ->update(['contrasena' => password_hash($request->password, PASSWORD_DEFAULT)]);
+        
+        // Eliminar token usado
+        DB::table('password_resets')->where('email', $request->correo)->delete();
+        
+        return redirect()->route('login')
+            ->with('success', 'Contraseña actualizada correctamente. Ahora puedes iniciar sesión.');
     }
 }

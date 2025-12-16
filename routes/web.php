@@ -22,6 +22,24 @@ Route::get('/login', function () {
 
 Route::post('/login', [ControladorAuth::class, 'ctrIngresarUsuario'])->name('login.procesar');
 
+    // RECUPERACIÓN DE CONTRASEÑA
+    Route::get('/olvide-contrasena', [ControladorAuth::class, 'mostrarOlvideContrasena'])
+        ->name('password.request');
+
+    Route::post('/olvide-contrasena', [ControladorAuth::class, 'enviarLinkRecuperacion'])
+        ->name('password.email');
+
+    Route::get('/restablecer-contrasena/{token}', [ControladorAuth::class, 'mostrarFormRestablecer'])
+        ->name('password.reset');
+
+    Route::post('/restablecer-contrasena', [ControladorAuth::class, 'restablecerPassword'])
+        ->name('password.update');
+        
+        // Confirmación de email enviado
+    Route::get('/correo-enviado', function () {
+        return view('modulos.correo-enviado');
+    })->name('password.sent');
+
 // RUTAS PROTEGIDAS (requieren autenticación)
 Route::middleware(['auth'])->group(function () {
     

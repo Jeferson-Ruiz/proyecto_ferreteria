@@ -61,6 +61,11 @@
     </div>
   </div>
 </div>
+<div class="text-center mt-3">
+    <a href="{{ route('password.request') }}" class="text-decoration-none">
+        <i class="fas fa-question-circle"></i> ¿Olvidaste tu contraseña?
+    </a>
+</div>
 
 <!-- jQuery -->
 <script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
